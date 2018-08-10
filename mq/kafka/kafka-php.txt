@@ -1,0 +1,5 @@
+===============
+kafka-php (php写的)
+===============
+注：kafka-php 使用 PHP 编写的 Kafka 客户端
+https://github.com/weiboad/kafka-php

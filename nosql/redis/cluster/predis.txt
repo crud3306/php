@@ -1,0 +1,87 @@
+==========
+predis
+==========
+使用predis，纯php开发，不需要安装，下载使用即可。
+predis使用了命名空间，需要php5.3+，灵活性高。
+
+官方地址：
+https://github.com/nrk/predis
+
+
+下载地址:
+https://github.com/nrk/predis/zipball/master
+或者
+https://github.com/nrk/predis/archive/v1.1.zip
+
+下载好后可重命名为predis
+
+使用
+-----------
+我有两台server，分别为:
+server1：192.168.1.198
+server2：192.168.1.199
+
+predis.php
+<?php
+require 'predis/autoload.php';//引入predis相关包
+//redis实例
+$servers = array(
+    'tcp://192.168.1.198:7000',
+    'tcp://192.168.1.198:7001',
+    'tcp://192.168.1.198:7002',
+    'tcp://192.168.1.199:7003',
+    'tcp://192.168.1.199:7004',
+    'tcp://192.168.1.199:7005',
+);
+ 
+$client = new Predis\Client($servers, array('cluster' => 'redis'));
+ 
+$client->set("name1", "11");
+$client->set("name2", "22");
+$client->set("name3", "33");
+ 
+$name1 = $client->get('name1');
+$name2 = $client->get('name2');
+$name3 = $client->get('name3');
+
+var_dump($name1, $name2, $name3);
+
+name1，name2，name3是3个key，按照算法分配到3个slot上，有可能分到3台服务器上
+首先运行predis.php查看结果：
+11 22 33
+
+
+然后登录到redis客户端进行集群验证：
+
+server1
+
+[root@localhost src]# redis-cli -c -p 7000
+127.0.0.1:7000> get name1
+-> Redirected to slot [12933] located at 192.168.1.199:7004
+"11"
+192.168.1.199:7004> get name2
+-> Redirected to slot [742] located at 192.168.1.199:7003
+"22"
+192.168.1.199:7003> get name3
+"33"
+192.168.1.199:7003>
+
+
+server2
+[root@localhost src]# redis-cli -c -p 7003
+127.0.0.1:7003> get name1
+-> Redirected to slot [12933] located at 192.168.1.199:7004
+"11"
+192.168.1.199:7004> get name2
+-> Redirected to slot [742] located at 192.168.1.199:7003
+"22"
+192.168.1.199:7003> get name3
+"33"
+192.168.1.199:7003>
+
+可以看到数据分布在各个服务器上，可以根据ps -ef | grep redis，杀掉其中几个redis实例，再看效果
+
+
+
+
+

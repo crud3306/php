@@ -1,0 +1,319 @@
+
+各种基础排序算法
+
+
+参考地址：
+https://www.cnblogs.com/isykw/p/6115461.html
+https://www.cnblogs.com/hellohell/p/5718175.html
+https://www.jb51.net/article/92609.htm (需看)
+https://blog.csdn.net/aaroun/article/details/79132130 (需看)
+
+====================
+冒泡排序
+====================
+冒泡排序（Bubble Sort，台湾译为：泡沫排序或气泡排序）是一种简单的排序算法。它重复地走访过要排序的数列，依次比较两个元素，如果他们的顺序错误就把他们交换过来。走访数列的工作是重复地进行直到没有再需要交换，也就是说该数列已经排序完成。这个算法的名字由来是因为越小的元素会经由交换慢慢“浮”到数列的顶端。
+
+步骤：
+-------------------------------
+比较相邻的元素。如果第一个比第二个大，就交换他们两个。
+对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对。在这一点，最后的元素应该会是最大的数。
+针对所有的元素重复以上的步骤，除了最后一个。
+持续每次对越来越少的元素重复上面的步骤，直到没有任何一对数字需要比较。
+
+具体代码：
+-------------------------------
+$arr=array(1,43,54,62,21,66,32,78,36,76,39);
+function bubbleSort ($arr)
+{
+     $len = count($arr);
+
+     //该层循环控制 需要冒泡的轮数
+     for ($i=1; $i<$len; $i++) {
+
+          //该层循环用来控制每轮 冒出一个数 需要比较的次数
+          for ($k=0; $k<$len-$i; $k++) {
+               if($arr[$k] > $arr[$k+1]) {
+                    $tmp = $arr[$k+1]; // 声明一个临时变量
+                    $arr[$k+1] = $arr[$k];
+                    $arr[$k] = $tmp;
+               }
+          }
+
+     }
+     return $arr;
+}
+
+
+
+====================
+快速排序
+====================
+快速排序是由东尼·霍尔所发展的一种排序算法。在平均状况下，排序 n 个项目要Ο(n log n)次比较。在最坏状况下则需要Ο(n2)次比较，但这种状况并不常见。事实上，快速排序通常明显比其他Ο(n log n) 算法更快，因为它的内部循环（inner loop）可以在大部分的架构上很有效率地被实现出来，且在大部分真实世界的数据，可以决定设计的选择，减少所需时间的二次方项之可能性。
+
+步骤：
+--------------------------------
+从数列中挑出一个元素，称为 “基准”（pivot），
+重新排序数列，所有元素比基准值小的摆放在基准前面，所有元素比基准值大的摆在基准的后面（相同的数可以到任一边）。在这个分区退出之后，该基准就处于数列的中间位置。这个称为分区（partition）操作。
+递归地（recursive）把小于基准值元素的子数列和大于基准值元素的子数列排序。
+
+具体代码：
+---------------------------------
+function quick_sort($arr)
+{
+     //判断参数是否是一个数组
+     if (!is_array($arr)) return false;
+
+     //递归出口:数组长度为1，直接返回数组
+     $length = count($arr);
+     if($length<=1) return $arr;
+
+     //数组元素有多个,则定义两个空数组
+     $left = $right = array();
+     //使用for循环进行遍历，把第一个元素当做比较的对象
+     for($i=1; $i<$length; $i++)
+     {
+          //判断当前元素的大小
+          if($arr[$i]<$arr[0]){
+               $left[]=$arr[$i];
+          }else{
+               $right[]=$arr[$i];
+          }
+     }
+
+     //递归调用
+     $left=quick_sort($left);
+     $right=quick_sort($right);
+
+     //将所有的结果合并
+     return array_merge($left, array($arr[0]), $right);
+}
+
+
+注：【冒泡排序】 和 【快速排序】 规属为 【交换排序】
+
+
+
+====================
+选择排序
+====================
+选择排序(Selection sort)是一种简单直观的排序算法。它的工作原理如下。首先在未排序序列中找到最小元素，存放到排序序列的起始位置，然后，再从剩余未排序元素中继续寻找最小元素，然后放到排序序列末尾。以此类推，直到所有元素均排序完毕。
+
+具体代码：
+------------------------------
+//实现思路 双重循环完成，外层控制轮数，当前的最小值。内层 控制的比较次数
+function select_sort($arr) {
+     //$i 当前最小值的位置， 需要参与比较的元素
+     for($i=0, $len=count($arr); $i<$len-1; $i++) {
+          //先假设最小的值的位置
+          $p = $i;
+          //$j 当前都需要和哪些元素比较，$i 后边的。
+          for($j=$i+1; $j<$len; $j++) {
+               //$arr[$p] 是 当前已知的最小值
+               if($arr[$p] > $arr[$j]) {
+                    //比较，发现更小的,记录下最小值的位置；
+                    //并且在下次比较时，应该采用已知的最小值进行比较。
+                    $p = $j;
+               }
+          }
+
+          //已经确定了当前的最小值的位置，保存到$p中。
+          //如果发现 最小值的位置与当前假设的位置$i不同，则位置互换即可
+          if($p != $i) {
+               $tmp = $arr[$p];
+               $arr[$p] = $arr[$i];
+               $arr[$i] = $tmp;
+          }
+     }
+     //返回最终结果
+     return $arr;
+}
+
+
+====================
+插入排序
+====================
+插入排序（Insertion Sort）的算法描述是一种简单直观的排序算法。它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。插入排序在实现上，通常采用in-place排序（即只需用到O(1)的额外空间的排序），因而在从后向前扫描过程中，需要反复把已排序元素逐步向后挪位，为最新元素提供插入空间。
+
+步骤：
+-------------------------------
+从第一个元素开始，该元素可以认为已经被排序
+取出下一个元素，在已经排序的元素序列中从后向前扫描
+如果该元素（已排序）大于新元素，将该元素移到下一位置
+重复步骤3，直到找到已排序的元素小于或者等于新元素的位置
+将新元素插入到该位置中
+重复步骤2
+
+具体代码：
+--------------------------------
+1 function insert_sort($arr)
+2 {
+3 $len=count($arr);
+4 for($i=1; $i<$len; $i++) {
+5 //获得当前需要比较的元素值。
+6 $tmp = $arr[$i];
+7 //内层循环控制 比较 并 插入
+8 for($j=$i-1; $j>=0; $j--) {
+9 //$arr[$i];//需要插入的元素; $arr[$j];//需要比较的元素
+10 if($tmp < $arr[$j]) {
+11 //发现插入的元素要小，交换位置
+12 //将后边的元素与前面的元素互换
+13 $arr[$j+1] = $arr[$j];
+14 //将前面的数设置为 当前需要交换的数
+15 $arr[$j] = $tmp;
+16 } else {
+17 //如果碰到不需要移动的元素
+18 //由于是已经排序好是数组，则前面的就不需要再次比较了。
+19 break;
+20 }
+21 }
+22 }
+23 //将这个元素 插入到已经排序好的序列内。
+24 //返回
+25 return $arr;
+26 }
+
+
+
+顺序查找 和 二分查找 也叫做折半查找
+
+=====================
+顺序查找（数组里查找某个元素）
+=====================
+function seq_sch($array, $n, $k){
+     $array[$n] = $k;
+     for($i=0; $i<$n; $i++){
+          if( $array[$i]==$k){
+               break;
+          }
+     }
+     if ($i<$n){
+          return $i;
+     }else{
+          return -1;
+     }
+}
+
+
+=====================
+二分查找（数组里查找某个元素）
+=====================
+function bin_sch($array, $low, $high, $k){
+     if ( $low <= $high){
+          $mid = intval(($low+$high)/2 );
+          if ($array[$mid] == $k){
+               return $mid;
+          }elseif ( $k < $array[$mid]){
+               return bin_sch($array, $low, $mid-1, $k);
+          }else{
+               return bin_sch($array, $mid+ 1, $high, $k);
+          }
+     }
+     return -1;
+}
+
+
+
+php写一个双向队列（腾讯）
+=====================
+<?php
+     class Deque{
+          private $queue=array();
+
+          public function addFirst($item){
+               return array_unshift($this->queue,$item);
+          }
+
+          public function addLast($item){
+               return array_push($this->queue,$item);
+          }
+
+          public function removeFirst(){
+               return array_shift($this->queue);
+          }
+
+          public function removeLast(){
+               return array_pop($this->queue);
+          }
+}
+
+
+写一个通用的二维数组排序
+=====================
+<?php
+//二维数组排序，$arr是数据，$keys是排序的健值，$order是排序规则，1是降序，0是升序
+function array_sort($arr,$keys,$order=0){
+     if(!is_array($arr)){
+          return false;
+     }
+
+     $keysvalue=array();
+     foreach($arr as $key => $val){
+          $keysvalue[$key] = $val[$keys];
+     }
+
+     if($order == 0){
+          asort($keysvalue);
+     }else{
+          arsort($keysvalue);
+     }
+
+     reset($keysvalue);
+     foreach($keysvalue as $key => $vals){
+          $keysort[$key] = $key;
+     }
+
+     $new_array=array();
+     foreach($keysort as $key=> $val){
+          $new_array[$key]=$arr[$val];
+     }
+
+     return $new_array;
+}
+
+// 测试
+$person=array(
+     array('id'=>2,'name'=>'zhangsan','age'=>23),
+     array('id'=>5,'name'=>'lisi','age'=>28),
+     array('id'=>3,'name'=>'apple','age'=>17)
+);
+$result = array_sort($person,'name',1);
+print_r($result);
+
+
+
+
+
+
+使对象可以像数组一样进行foreach循环，要求属性必须是私有。(Iterator模式的PHP5实现，写一类实现Iterator接口)（腾讯）
+=====================
+<?php
+class Test implements Iterator{
+     private $item = array('id'=>1,'name'=>'php');
+
+     public function rewind(){
+          reset($this->item);
+     }
+
+     public function current(){
+          return current($this->item);
+     }
+
+     public function key(){
+          return key($this->item);
+     }
+
+     public function next(){
+          return next($this->item);
+     }
+
+     public function valid(){
+          return($this->current()!==false);
+     }
+}
+
+// 测试
+$t=new Test;
+foreach($t as $k=>$v){
+     echo$k,'--->',$v,'<br/>';
+}
+

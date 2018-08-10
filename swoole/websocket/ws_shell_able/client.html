@@ -1,0 +1,26 @@
+<script>
+var ws = new WebSocket('ws://127.0.0.1:10000');
+
+ws.onopen = function(evt) {
+	console.log('connect to ws server');
+	ws.send('{"cmd":"ls", "is_block":0}');
+
+	// ws.send('{"cmd":"gdb", "is_block":1}');
+	// ws.send('{"cmd":"info", "is_block":1}');
+	// ws.send('{"cmd":"quit", "is_block":1}');
+	// ws.send('{"cmd":"exit", "is_block":1}');
+}
+
+ws.onclose = function(evt) {
+	console.log('disconnected');
+}
+
+ws.onmessage = function(evt) {
+	console.log('received from server：');
+	console.log(evt.data);
+}
+
+ws.onerror = function(evt, e) {
+	console.log('error occured：'+evt.data);
+}
+</script>

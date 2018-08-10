@@ -1,0 +1,20 @@
+
+下单减库存考虑
+==============
+
+https://blog.csdn.net/u010811263/article/details/81084886
+https://www.cnblogs.com/Leo_wl/p/4609338.html
+
+
+https://www.cnblogs.com/bsfz/p/7801980.html （这两篇是一人写的）
+http://www.cnblogs.com/bsfz/p/7824428.html
+
+
+
+
+提出：
+
+预占库存，即内部有预扣逻辑
+update 时的 where 条件 and (库存数 - 本次预购数)> 0
+redis
+

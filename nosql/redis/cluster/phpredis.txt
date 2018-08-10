@@ -1,0 +1,139 @@
+==========
+phpredis
+==========
+因phpredis是c写的，所以需编译安装。
+
+官方地址：https://github.com/phpredis/phpredis
+
+
+安装
+==========
+wget https://github.com/nicolasff/phpredis/archive/2.2.4.tar.gz
+#tar zxvf phpredis-2.2.4.tar.gz
+tar zxvf 2.2.4.tar.gz
+#进入安装目录
+cd phpredis-2.2.4
+
+#用phpize生成configure配置文件
+/usr/local/php/bin/phpize 
+
+#配置
+./configure --with-php-config=/usr/local/php/bin/php-config
+
+make #编译
+make install #安装
+
+安装完成之后，出现下面的安装路径
+/usr/local/php/lib/php/extensions/no-debug-non-zts-20090626/
+
+配置php支持
+-------------
+#编辑配置文件，在最后一行添加以下内容
+vi /usr/local/php/etc/php.ini 
+
+添加
+extension="redis.so"
+保存退出
+
+重启php
+
+注意：安装过程中如果提示cannot find autoconf。
+wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+tar -zxvf autoconf-2.69.tar.gz
+cd autoconf-2.69
+./configure && make && make install
+
+
+
+使用
+==========
+官方文档，信息较少
+https://github.com/phpredis/phpredis/blob/feature/redis_cluster/cluster.markdown
+
+
+初始化连接到redis cluster服务器
+-----------
+$obj_cluster = new RedisCluster(NULL, [
+	'192.168.33.13:7000', 
+	'192.168.33.13:7001', 
+	'192.168.33.13:7002', 
+	'192.168.33.13:7003', 
+	'192.168.33.13:7004'
+]);
+var_dump($obj_cluster);
+打印结果如下：
+class RedisCluster#5 (0) {}
+一个RedisCluster 类资源。表示redis 已经连接成功了。
+
+第一个参数传NULL 别问我，我也不知道为啥。反正文档没找到，这篇也没看懂。 
+第二个参数是我们需要连接的redis cluster的master服务器列表。我们有5个master，就填5个。
+
+
+
+我们尝试redis的方法：
+$obj_cluster->set('name1', '1111');
+$obj_cluster->set('name2', '2222');
+$obj_cluster->set('name3', '333');
+
+$name1 = $obj_cluster->get('name1');
+$name2 = $obj_cluster->get('name2');
+$name3 = $obj_cluster->get('name3');
+
+var_dump($name1, $name2, $name3);
+
+结果如下：
+string(4) "1111"
+string(4) "2222"
+string(3) "333"
+
+前面的redis cluster 的学习，我们知道name1, name2, name3 是3个key , 会按照算法，分配到3个slot上，有可能分到3台服务器上。
+
+我们连接服务端看下：
+➜ redis-cli -h 192.168.33.13 -p 7009 -c
+192.168.33.13:7009> get name1
+-> Redirected to slot [12933] located at 192.168.33.13:7003
+"1111"
+192.168.33.13:7003> get name2
+-> Redirected to slot [742] located at 192.168.33.13:7000
+"2222"
+192.168.33.13:7000> get name3
+-> Redirected to slot [4807] located at 192.168.33.13:7001
+"333"
+192.168.33.13:7001>
+
+服务端是有跳转的，而php的扩展phpredis直接就给出结果了，这点很赞。
+
+
+
+
+
+它还提供了一种连接方式：
+==========
+// Connect and specify timeout and read_timeout
+$obj_cluster = new RedisCluster(
+	NULL, ["host:7000", "host:7001", 1.5, 1.5];
+);
+
+可以看到master列表加入了两个1.5，其实对应的是 timeout和read_timeout功能。
+----------
+timeout： 表示连接redis的最长时间，这里设为1.5秒，表示超过1.5秒要是还没连接成功就返回false 。
+read_timeout： 表示连接redis成功后，读取一个key的超时时间，有时候读取一个key，可能value比较大，读取需要很长时间，这里设置1.5秒，表示要是过了1.5秒还没读取到数据就返回false。
+
+
+我们试用下：
+===========
+$obj_cluster = new RedisCluster(NULL, [
+	'192.168.33.13:7000', 
+	'192.168.33.13:7001', 
+	'192.168.33.13:7002', 
+	'192.168.33.13:7003', 
+	'192.168.33.13:7004', 
+	1.5, 
+	1.5
+]);
+
+在master列表后面加入了2个参数，其它的操作几乎一样。
+
+
+
+

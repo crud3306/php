@@ -1,0 +1,312 @@
+
+Mycat
+===========
+Mycat是一款开源的数据库分库分表中间件，是一个开源的分布式数据库系统，是一个实现了MySQL协议的服务器。
+
+前端用户可以把它看作是一个数据库代理，用MySQL客户端工具和命令行访问，而其后端可以用MySQL原生协议与多个MySQL服务器通信，也可以用JDBC协议与大多数主流数据库服务器通信，其核心功能是分表分库，即将一个大表水平分割为N个小表，存储在后端MySQL服务器里或者其他数据库里。
+
+
+官网：http://www.mycat.io/
+下载：http://dl.mycat.io/
+
+wget http://dl.mycat.io/1.6-RELEASE/Mycat-server-1.6-RELEASE-20161028204710-linux.tar.gz
+
+参考地址：
+https://blog.csdn.net/mchdba/article/details/51162243 (需看)
+https://www.cnblogs.com/joylee/p/7513038.html
+
+
+
+
+安装（不需安装，下载解压即可）
+===========
+Mycat的安装其实只要解压下载的目录就可以了，非常简单。
+
+下载解压完成后，目录如下：
+
+bin：   mycat命令，启动、重启、停止等
+catlet：	Mycat的一个扩展功能
+conf：	Mycat 配置信息，重点关注
+lib：	Mycat引用的jar包，Mycat是java开发的
+logs：	日志文件，包括Mycat启动的日志和运行的日志。
+
+
+
+配置
+===========
+Mycat的配置文件都在conf目录里面，这里介绍几个常用的文件：
+
+server.xml	Mycat的配置文件，设置账号、参数等
+schema.xml	Mycat对应的物理数据库和数据库表的配置
+rule.xml	Mycat分片（分库分表）规则
+
+
+使用
+===========
+Mycat的架构其实很好理解，Mycat是代理，Mycat后面就是物理数据库。和Web服务器的Nginx类似。对于使用者来说，访问的都是Mycat，不会接触到后端的数据库。
+
+
+
+我们有以下服务器：
+=============
+服务器	    IP	        说明
+Mycat	    192.168.0.2	mycat服务器，连接数据库时，连接此服务器
+database1	192.168.0.3	物理数据库1，真正存储数据的数据库
+database2	192.168.0.4	物理数据库2，真正存储数据的数据库
+
+Mycat作为主数据库中间件，肯定是与代码弱关联的，所以代码是不用修改的，使用Mycat后，连接数据库是不变的，默认端口是8066。连接方式和普通数据库一样，如：jdbc:mysql://192.168.0.2:8066/
+
+
+
+server.xml 
+--------------
+<user name="test">
+    <property name="password">test</property>  
+    <property name="schemas">lunch</property>  
+    <property name="readOnly">false</property>  
+    
+    <!-- 表级 DML 权限设置 -->
+    <!--        
+    <privileges check="false">
+        <schema name="TESTDB" dml="0110" >
+            <table name="tb01" dml="0000"></table>
+            <table name="tb02" dml="1111"></table>
+        </schema>
+    </privileges>       
+     -->
+</user>
+
+重点关注下面这段，其他默认即可。
+
+参数	说明
+user	    用户配置节点
+--name	    登录的用户名，也就是连接Mycat的用户名
+--password	登录的密码，也就是连接Mycat的密码
+--schemas	数据库名，这里会和schema.xml中的配置关联，多个用逗号分开，例如需要这个用户需要管理两个数据库db1,db2，则配置db1,db2
+--privileges	配置用户针对表的增删改查的权限，具体见文档吧
+我这里配置了一个账号test 密码也是test,针对数据库lunch,读写权限都有，没有针对表做任何特殊的权限。
+
+
+
+分库分表
+--------------
+schema.xml
+--------------
+schema.xml是最主要的配置项，首先看我的配置文件。
+
+<?xml version="1.0"?>
+<!DOCTYPE mycat:schema SYSTEM "schema.dtd">
+<mycat:schema xmlns:mycat="http://io.mycat/">
+
+<!-- 数据库配置，与server.xml中的数据库对应 -->
+    <schema name="lunch" checkSQLschema="false" sqlMaxLimit="100">
+        <table name="lunchmenu" dataNode="dn1"  />
+        <table name="restaurant" dataNode="dn1"  />
+        <table name="userlunch" dataNode="dn1"  />
+        <table name="users" dataNode="dn1"  />
+        <table name="dictionary" primaryKey="id" autoIncrement="true" dataNode="dn1,dn2"  rule="mod-long" />
+    </schema>
+
+<!-- 分片配置 -->
+    <dataNode name="dn1" dataHost="test1" database="lunch" />
+    <dataNode name="dn2" dataHost="test2" database="lunch" />
+
+<!-- 物理数据库配置 -->
+    <dataHost name="test1" maxCon="1000" minCon="10" balance="0"  writeType="0" dbType="mysql" dbDriver="native">
+        <heartbeat>select user();</heartbeat>
+        <writeHost host="hostM1" url="192.168.0.2:3306" user="root" password="123456">  
+        </writeHost>
+    </dataHost>
+
+    <dataHost name="test2" maxCon="1000" minCon="10" balance="0" writeType="0" dbType="mysql" dbDriver="native">
+        <heartbeat>select user();</heartbeat>
+        <writeHost host="hostS1" url="192.168.0.3:3306" user="root" password="123456">  
+        </writeHost>
+    </dataHost>
+
+</mycat:schema>
+
+主要有下面三块内容：
+----------------
+参数	        说明
+schema	    数据库设置，此数据库为逻辑数据库，name 与 server.xml中schema对应
+dataNode	分片信息，也就是分库相关配置
+dataHost	物理数据库，真正存储数据的数据库
+
+
+每个节点的属性逐一说明：
+----------------
+schema:
+属性	            说明
+name	        逻辑数据库名，与server.xml中的schema对应
+checkSQLschema	数据库前缀相关设置，建议看文档，这里暂时设为folse
+sqlMaxLimit	    select时默认的limit，避免查询全表
+
+
+table:
+属性	        说明
+name	    表名，物理数据库中表名
+dataNode	表存储到哪些节点，多个节点用逗号分隔。节点为下文dataNode设置的name
+primaryKey	主键字段名，自动生成主键时需要设置
+autoIncrement	是否自增
+rule	分片规则名，具体规则下文rule详细介绍
+
+
+dataNode:
+属性	        说明
+name	    节点名，与table中dataNode对应
+datahost	物理数据库名，与datahost中name对应
+database	物理数据库中数据库名
+
+
+dataHost:
+属性	    说明
+name	物理数据库名，与dataNode中dataHost对应
+balance	均衡负载的方式
+writeType	写入方式
+dbType	数据库类型
+heartbeat	心跳检测语句，注意语句结尾的分号要加。
+
+
+
+上面的提供的schema.xml文件配置，作用是：数据库分表分库
+
+我在192.168.0.2、192.168.0.3均有数据库lunch。
+上面配置实现了：
+lunchmenu、restaurant、userlunch、users这些表都只写入节点dn1，也就是192.168.0.2这个服务。
+dictionary写入了dn1、dn2两个节点，也就是192.168.0.2、192.168.0.3这两台服务器。
+分片的规则为：mod-long。
+主要关注rule属性，rule属性的内容来源于rule.xml这个文件，Mycat支持10种分表分库的规则，基本能满足你所需要的要求，这个必须赞一个，其他数据库中间件好像都没有这么多。
+
+table中的rule属性对应的就是rule.xml文件中tableRule的name,具体有哪些分表和分库的实现，建议还是看下文档。
+
+我这里选择的mod-long就是将数据平均拆分。因为我后端是两台物理库，所以rule.xml中mod-long对应的function count为2，见下面部分代码：
+
+<tableRule name="mod-long">
+    <rule>
+        <columns>id</columns>
+        <algorithm>mod-long</algorithm>
+    </rule>
+</tableRule>
+    
+<function name="mod-long" class="io.mycat.route.function.PartitionByMod">
+    <!-- how many data nodes -->
+    <property name="count">2</property>
+</function>
+
+
+
+
+数据库读写分离
+--------------
+schema.xml
+
+<?xml version="1.0"?>
+<!DOCTYPE mycat:schema SYSTEM "schema.dtd">
+<mycat:schema xmlns:mycat="http://io.mycat/">
+
+<!-- 数据库配置，与server.xml中的数据库对应 -->
+    <schema name="lunch" checkSQLschema="false" sqlMaxLimit="100">
+        <table name="lunchmenu" dataNode="dn1"  />
+        <table name="restaurant" dataNode="dn1"  />
+        <table name="userlunch" dataNode="dn1"  />
+        <table name="users" dataNode="dn1"  />
+        <table name="dictionary" primaryKey="id" autoIncrement="true" dataNode="dn1"  />
+    </schema>
+
+<!-- 分片配置 -->
+    <dataNode name="dn1" dataHost="test1" database="lunch" />
+
+
+<!-- 物理数据库配置 -->
+    <dataHost name="test1" maxCon="1000" minCon="10" balance="1"  writeType="0" dbType="mysql" dbDriver="native">
+        <heartbeat>select user();</heartbeat>
+
+        <writeHost host="hostM1" url="192.168.0.2:3306" user="root" password="123456">  
+            <readHost host="hostM1" url="192.168.0.3:3306" user="root" password="123456">   
+            </readHost>
+        </writeHost>
+
+    </dataHost>
+
+</mycat:schema>
+
+这样的配置与前一个示例配置改动如下：
+删除了table分配的规则，只有一个datanode，一个datahost，但是writehost总添加了readhost, balance改为1，表示读写分离。
+
+以上配置达到的效果就是102.168.0.2为主库，192.168.0.3为从库。
+
+注意：Mycat主从分离只是在读的时候做了处理，写入数据的时候，只会写入到writehost，需要通过mycat的主从复制将数据复制到readhost，这个问题当时候我纠结了好久，数据写入writehost后，readhost一直没有数据，以为是自己配置的问题，后面才发现Mycat就没有实现主从复制的功能，毕竟数据库本身自带的这个功能才是最高效稳定的。
+
+
+至于其他的场景，如同时主从和分表分库也是支持的了，只要了解这个实现以后再去修改配置，都是可以实现的。而热备及故障专业官方推荐使用haproxy配合一起使用，大家可以试试。
+
+
+
+
+Mycat的启动也很简单，启动命令在Bin目录：
+===============
+##启动
+mycat start
+
+##停止
+mycat stop
+
+##重启
+mycat restart
+
+
+如果在启动时发现异常，在logs目录中查看日志。
+----------------
+wrapper.log 为程序启动的日志，启动时的问题看这个
+mycat.log 为脚本执行时的日志，SQL脚本执行报错后的具体错误内容,查看这个文件。mycat.log是最新的错误日志，历史日志会根据时间生成目录保存。
+
+
+mycat启动后，执行命令不成功，可能实际上配置有错误，导致后面的命令没有很好的执行。
+
+Mycat带来的最大好处就是使用是完全不用修改原有代码的，在mycat通过命令启动后，你只需要将数据库连接切换到Mycat的地址就可以了。如下面就可以进行连接了：
+mysql -h192.168.0.1 -P8806 -uroot -p123456
+连接成功后可以执行sql脚本了。
+
+所以，可以直接通过sql管理工具（如：navicat、datagrip）连接，执行脚本。我一直用datagrip来进行日常简单的管理，这个很方便。
+
+Mycat还有一个管理的连接，端口号是9906.
+mysql -h192.168.0.1 -P9906 -uroot -p123456
+
+连接后可以根据管理命令查看Mycat的运行情况，当然，喜欢UI管理方式的人，可以安装一个Mycat-Web来进行管理，有兴趣自行搜索。
+
+
+简而言之，开发中使用Mycat和直接使用Mysql机会没有差别。
+
+
+
+
+常见问题
+================
+使用Mycat后总会遇到一些坑，我将自己遇到的一些问题在这里列一下，希望能与大家有共鸣：
+
+Mycat是不是配置以后，就能完全解决分表分库和读写分离问题？
+----------------
+Mycat配合数据库本身的复制功能，可以解决读写分离的问题，但是针对分表分库的问题，不是完美的解决。或者说，至今为止，业界没有完美的解决方案。
+分表分库写入能完美解决，但是，不能完美解决主要是联表查询的问题，Mycat支持两个表联表的查询，多余两个表的查询不支持。 其实，很多数据库中间件关于分表分库后查询的问题，都是需要自己实现的，而且节本都不支持联表查询，Mycat已经算做地非常先进了。
+分表分库的后联表查询问题，大家通过合理数据库设计来避免。
+
+
+Mycat支持哪些数据库，其他平台如 .net、PHP能用吗？
+----------------
+官方说了，支持的数据库包括MySQL、SQL Server、Oracle、DB2、PostgreSQL 等主流数据库，很赞。
+尽量用Mysql,我试过SQL Server，会有些小问题，因为部分语法有点差异。
+
+
+Mycat 非JAVA平台如 .net、PHP能用吗？
+----------------
+可以用
+
+
+
+更多参考
+============
+Mycat权威指南： http://www.mycat.io/document/Mycat_V1.6.0.pdf
+
+
+

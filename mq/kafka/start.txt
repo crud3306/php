@@ -1,0 +1,62 @@
+
+
+当前使用的php的kafka扩展，主要有下面两种
+===============
+php-rdkafka （c语言写的）
+kafka-php (php写的)
+
+
+安装使用详见：
+
+php-rdkafka.txt
+kafka-php.txt
+
+
+概述
+==============
+Kafka 是一种高吞吐的分布式消息系统，能够替代传统的消息队列用于解耦合数据处理，缓存未处理消息等，同时具有更高的吞吐率，支持分区、多副本、冗余，因此被广泛用于大规模消息数据处理应用。
+
+
+
+Kafka基本概念：
+==============
+Topic：特指Kafka处理的消息源（feeds of messages）的不同分类。
+
+Partition：Topic物理上的分组，一个topic可以分为多个partition，每个partition是一个有序的队列。partition中的每条消息都会被分配一个有序的id（offset）。
+
+Message：消息，是通信的基本单位，每个producer可以向一个topic（主题）发布一些消息。
+
+Producers：消息和数据生产者，向Kafka的一个topic发布消息的过程叫做producers。
+
+Consumers：消息和数据消费者，订阅topics并处理其发布的消息的过程叫做consumers。
+
+Broker：缓存代理，Kafa集群中的一台或多台服务器统称为broker。
+
+
+
+Kafka的整体架构非常简单，producer、broker（kafka）和consumer都可以有多个。Producer，consumer实现Kafka注册的接口，数据从producer发送到broker，broker承担一个中间缓存和分发的作用。broker分发注册到系统中的consumer。broker的作用类似于缓存，即活跃的数据和离线处理系统之间的缓存。客户端和服务器端的通信，是基于简单，高性能，且与编程语言无关的TCP协议。 
+
+
+
+Kafka的特点：
+===================
+以时间复杂度为O(1)的方式提供消息持久化能力，即使对TB级以上数据也能保证常数时间复杂度的访问性能。
+
+高吞吐率。即使在非常廉价的商用机器上也能做到单机支持每秒100K条以上消息的传输。【据了解，Kafka每秒可以生产约25万消息（50 MB），每秒处理55万消息（110 MB）】
+
+支持Kafka Server间的消息分区，同时保证每个Partition内的消息顺序传输。
+
+分布式系统，易于向外扩展。所有的producer、broker和consumer都会有多个，均为分布式的。无需停机即可扩展机器。
+
+消息被处理的状态是在consumer端维护，而不是由server端维护。当失败时能自动平衡。
+
+同时支持离线数据处理和实时数据处理。
+
+
+
+
+
+
+
+
+

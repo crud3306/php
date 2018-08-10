@@ -1,0 +1,26 @@
+
+
+<script>
+var wsServer = 'ws://127.0.0.1:12345';
+var ws = new WebSocket(wsServer);
+
+ws.ononpen = function(evt) {
+	console.log('connected to WebSocket server');
+
+	ws.send("hello");
+}
+
+ws.onclose = function(evt) {
+	console.log('diconnect');
+}
+
+ws.onmessage = function(evt) {
+	console.log('receive message from server:'+ evt.data);
+
+}
+
+ws.onerror = function(evt, e) {
+	console.log('error occured：'+evt.data);
+}
+
+</script>

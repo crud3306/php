@@ -1,0 +1,16 @@
+
+参考地址：
+=========
+https://blog.csdn.net/qiguiting/article/details/51057989
+https://blog.csdn.net/nuli888/article/details/52136918
+
+
+目前我们用到的 php 的 redis 扩展 主要有2个：
+1 phpredis, 它是用c写的php的高效扩展，是最常用的。https://github.com/phpredis/phpredis
+2 predis, 它是用php代码写的，也用的蛮多的。https://github.com/nrk/predis。
+
+
+我们分别看下他们在集群中的用法。分别见下面两文档：
+
+cluster/phpredis.md
+cluster/predis.md

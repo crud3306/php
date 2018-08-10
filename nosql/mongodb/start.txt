@@ -1,0 +1,102 @@
+
+安装MongoDB
+=============
+
+1、下面安装MongoDB，先下载：
+-------------
+cd /usr/src
+wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-2.6.4.tgz
+
+2、解压，进入目录：
+-------------
+tar -zxvf mongodb-linux-x86_64-2.6.4.tgz -C /usr/src
+mv mongodb-linux-x86_64-2.6.4 mongodb 
+cd mongodb
+
+3、创建数据库和日志的目录：
+-------------
+mkdir log
+mkdir db
+
+4、以后台运行方式启动：
+-------------
+./bin/mongod --dbpath=./db --logpath=./log/mongodb.log --fork --auth
+
+会显示如下内容：
+about to fork child process, waiting until server is ready for connections.
+forked process: 4623
+child process started successfully, parent exiting
+
+5、设置开机启动：
+-------------
+echo "/usr/local/mongodb/bin/mongod --dbpath=/usr/local/mongodb/db --logpath=/usr/local/mongodb/log/mongodb.log --fork --auth" >> /etc/rc.local
+
+ok，搞定，然后可以参看下端口:
+netstat -nalupt | grep mongo
+tcp 0 0 0.0.0.0:27017 0.0.0.0:* LISTEN 4623/./bin/mongod
+
+命令行连接，测试
+-------------
+$ cd /usr/local/mongodb/bin
+$ ./mongo
+查看拥有的库
+> show dbs
+> use local
+
+
+
+
+安装php的mongodb扩展
+=============
+两个扩展
+-------------
+mongo ：旧的已废弃，但仍可用。
+mongodb：新的，不断更新，支持php7。
+
+这两个扩展提供的类和接口完全不一样。
+例如：原本用 mongo 一些查询操作返回一个数组的，在 mongodb 中变成游标读取的形式。
+
+mongo 这个扩展已经废弃了，不过 bug 和 security 方面的问题还会继续修复，不支持PHP7
+
+mongodb 支持PHP7,同时不断加入 MongoDB 新版本的特性支持
+
+
+所以我们不再使用mongo扩展，而使用mongodb扩展
+
+
+下载php-mongodb扩展
+wget http://pecl.php.net/get/mongo-1.6.12.tgz
+wget https://pecl.php.net/get/mongodb-1.5.0.tgz
+解压
+tar zxvf mongodb-1.5.0.tgz
+
+编译安装
+cd mongodb-1.5.0
+phpize
+./configure --with-php-config=/usr/bin/php-config
+make && make install
+
+
+
+
+在安装过程中可能会报以下错误
+1 Can't find PHP headers in /usr/include/php The php-devel package is required for use of this command.
+---------------
+需要安装php-devel
+yum install php-devel
+
+2 /var/tmp/mongo/contrib/php-ssl.h:33:25: error: openssl/evp.h: No such file or directory
+-----------------
+需要安装openssl-devel
+yum install openssl-devel
+
+在php.ini文件中添加extension=mongo.so
+extension=mongo.so
+
+重启php-fpm或服务器
+/etc/init.d/ats-php-fpm restart
+
+
+
+安装php7的mongodb扩展，安装方式不同。请另外查找
+
