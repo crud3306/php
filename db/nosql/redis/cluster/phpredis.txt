@@ -45,8 +45,22 @@ cd autoconf-2.69
 
 
 
+
 使用
-==========
+==============
+
+基本使用
+--------------
+$redis = new Redis();  
+$redis->connect('127.0.0.1', 6379);  
+$result = $redis->set('test',"11111111111");  
+var_dump($result);    //结果：bool(true)  
+
+
+
+
+redis cluster用法
+--------------
 官方文档，信息较少
 https://github.com/phpredis/phpredis/blob/feature/redis_cluster/cluster.markdown
 
