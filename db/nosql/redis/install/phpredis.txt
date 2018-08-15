@@ -1,0 +1,51 @@
+==========
+phpredis
+==========
+因phpredis是c写的，所以需编译安装。
+
+官方地址：https://github.com/phpredis/phpredis
+
+
+安装
+==========
+wget https://github.com/nicolasff/phpredis/archive/2.2.4.tar.gz
+#tar zxvf phpredis-2.2.4.tar.gz
+tar zxvf 2.2.4.tar.gz
+#进入安装目录
+cd phpredis-2.2.4
+
+#用phpize生成configure配置文件
+/usr/local/php/bin/phpize 
+
+#配置
+./configure --with-php-config=/usr/local/php/bin/php-config
+
+make #编译
+make install #安装
+
+安装完成之后，出现下面的安装路径
+/usr/local/php/lib/php/extensions/no-debug-non-zts-20090626/
+
+配置php支持
+-------------
+#编辑配置文件，在最后一行添加以下内容
+vi /usr/local/php/etc/php.ini 
+
+添加
+extension="redis.so"
+保存退出
+
+重启php
+
+注意：安装过程中如果提示cannot find autoconf。
+wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+tar -zxvf autoconf-2.69.tar.gz
+cd autoconf-2.69
+./configure && make && make install
+
+
+
+
+
+
+

@@ -15,6 +15,10 @@ https://github.com/nrk/predis/archive/v1.1.zip
 
 下载好后可重命名为predis
 
+
+
+
+
 使用
 -----------
 我有两台server，分别为:
