@@ -2,7 +2,7 @@
 /**
  * Mysql类
  */
-class Mysql{
+class Mysqli{
 
     private static $link = null;//数据库连接
 
