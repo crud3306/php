@@ -4,7 +4,7 @@
 // pdo连接
 // ======================
 $pdo = new PDO($dsn, $db_user, $db_pwd);
-// 注意第一个参数的格式：$dsn = "mysql:host=localhost;dbname=jikexueyuan"
+// 注意 第一个参数的格式：$dsn = "mysql:host=localhost;dbname=jikexueyuan"
 
 // 注意pdo预处理绑定参数的两种方式：
 // 1 问号 
@@ -31,7 +31,8 @@ $options = [
 try {
 	// 连接数据源
 	$pdo = new PDO($dsn, $db_user, $db_pwd, $options);
-	$pdo->query('set names utf8');
+	// 如果option里已指定了set names utf8，这里不用再次写了
+	// $pdo->query('set names utf8');
 
 } catch(PDOException $e) {
   	die("数据库连接失败".$e->getMessage());
