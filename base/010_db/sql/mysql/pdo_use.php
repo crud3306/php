@@ -75,6 +75,7 @@ $name = 'one';
 $value = 1;
 $stmt->execute();
 echo $stmt->rowCount();
+echo $pdo->lastInsertId();
 
 
 
@@ -109,6 +110,16 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
 
 
+// 事务
+// ===============
+// 开启
+$pdo->beginTransaction();
+// 回滚
+$pdo->rollBack();
+// 提交
+$pdo->commit();
+  
+  
 
 
 

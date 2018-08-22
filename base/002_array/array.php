@@ -1,5 +1,6 @@
 <?php
 
+// 常用
 array array_filter ( array $array [, callable $callback [, int $flag = 0 ]] )
 
 array array_map ( callable $callback , array $array1 [, array $... ] )

@@ -23,7 +23,7 @@ var_dump($instr);
 
 // mb_convert_encoding 
 // =====================
-// 为了确保转换的成功率，我们可以用另一个转换函数 mb_convert_encoding，这个函数效率不是很高，另外这个函数还可以省略第三个参数，自动识别内容编码，不过最好不要用，影响效率。但为了保证成功率，还是推荐用这个。
+// 为了确保转换的成功率，我们可以用另一个转换函数 mb_convert_encoding，这个函数效率不是很高，另外这个函数还可以省略第三个参数，自动识别内容编码，不过最好带上，不然影响效率。为了保证成功率，还是推荐用这个。
 // 注意：mb_convert_encoding和iconv参数顺序不一样
 string mb_convert_encoding ( string $str , string $to_encoding [, mixed $from_encoding ] )
 // 第一个参数：要处理的字符串

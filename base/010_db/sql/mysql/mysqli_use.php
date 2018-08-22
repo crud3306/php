@@ -118,6 +118,22 @@ $mysqli->close();
 
 
 
+// 事务
+// ===============
+// 方式1
+// begin_transaction可以传参，事务级别
+$mysqli->begin_transaction();
+$msyqli->commit(); //提交事务
+$mysqli->rollback();
+
+// 方式2
+$mysqli->autocommit(FALSE);
+$msyqli->commit(); 
+$mysqli->rollback();
+$mysqli->autocommit(TRUE); //开启自动提交功能
+
+
+
 
 
 
