@@ -98,10 +98,11 @@ bool posix_kill ( int $pid , int $sig ) // 向进程id为$pid的进程发送$sig
 int pcntl_waitpid ( int $pid , int &$status [, int $options = 0 ] )  //   挂起当前进程的执行直到进程号为$pid的进程退出(如果$pid为-1，则等待任意一个子进程);  
 
 
+
 进程间通信
 ------------
 进程间通信可以用上面描述过的signal通信，也可以有其它方式。
-
+这些更详细的请看signal目录 和 communication 目录。
 
   
   
