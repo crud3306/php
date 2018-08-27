@@ -25,15 +25,15 @@ location ~ .*\.(gif|jpg|png|flv|swf|rar|zip)$
 传统防盗链遇到的问题：伪造referer，可以使用加密签名解决    
   
   
-方式二：使用加密签名解决
+方式二：使用加密签名解决  
 -------------
 使用第三方模块HttpAccessKeyModule实现nginx防盗链  
 > accesskey on|off 模块开关  
 > accesskey_hashmethod md5 | sha-1 签名的加密方式  
 > accesskey_arg GET参数名称  
-> accesskey_signature 加密规则，例："mypass$remote_addr"
+> accesskey_signature 加密规则，例："mypass$remote_addr"  
   
-例: 
+例:   
 ```nginx
 location ~ .*\.(gif|jpg|png|flv|swf|rar|zip)$
 {
@@ -43,8 +43,8 @@ location ~ .*\.(gif|jpg|png|flv|swf|rar|zip)$
 	accesskey_signature "abcd123$remote_addr"; #假设mypass为aced123
 }
 ```
-
-php端
+  
+php端  
 ```php
 <?php
 //同nginx中配置的规则一致

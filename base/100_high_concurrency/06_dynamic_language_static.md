@@ -5,7 +5,7 @@
   
 什么是动态语言静态化？  
 -------------
-将现在php等动态语言的逻辑代码生成为静态html文件，用户访问动态脚本重定向到静态html文件的过程。  
+将现在php等动态语言的逻辑代码生成为静态html文件，用户访问动态脚本重定向到静态html文件的过程。    
   
 注意：对实时性要求不高的页面，才适合做动态语言静态化。  
   
@@ -18,11 +18,11 @@
   
   
   
-静态化实现方式
+静态化实现方式  
 --------------
 1 使用模板引擎  
-
-可以使用smarty的缓存机制生成静态html缓存文件  
+  
+可以使用smarty的缓存机制生成静态html缓存文件   
 > $smarty->cache_dir = $ROOT."/cache"; // 缓存目录  
 > $smarty->caching = true; // 是否开启缓存  
 > $smarty->cache_lifetime = "3600"; // 缓存时间  
@@ -32,7 +32,8 @@
 清理缓存相关方法  
 > $smarty->clear_all_cache(); // 清除所有缓存  
 > $smarty->clear_cache('file.html'); // 清除指定的缓存  
-> $smarty->clear_cache('article.html', $art_id); // 清除同一个模板下的指定缓存号的缓存  
+> $smarty->clear_cache('article.html', $art_id); // 清除同一个模板下的指定缓存号的缓存
+    
   
   
 2 利用ob系列的函数   
@@ -41,18 +42,18 @@
 > ob_clean(); // 清空输出缓冲区  
 > ob_end_flush(); // 冲刷出（送出）输出缓冲区内容并关闭缓冲  
   
-使用：
+使用：  
 > ob_start(); // 先打开输出缓冲  
 > 然后这里是相送输出到页面的信息  
 > ...  
-> ob_get_contents();  // 获取缓冲区内容
+> ob_get_contents();  // 获取缓冲区内容  
 > ob_end_flush();  
 > fopen()写入  
   
 可以判断文件的inode修改时间，判断是否过期  
 使用filectime函数  
-
-ob实例：
+  
+ob实例：  
 ```php
 <?php
 $id = !empty($_GET['id']) ? $_GET['id'] : '';
