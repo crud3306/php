@@ -1,4 +1,4 @@
-
+  
 参考地址：  
 http://imhuchao.com/602.html  
   
@@ -101,9 +101,9 @@ int pcntl_waitpid ( int $pid , int &$status [, int $options = 0 ] )  //   挂起
 
 进程间通信
 ------------
-进程间通信可以用上面描述过的signal通信，也可以有其它方式。
-这些更详细的请看signal目录 和 communication 目录。
-
+进程间通信可以用上面描述过的signal通信，也可以有其它方式。  
+这些更详细的请看signal目录 和 communication 目录。  
+  
   
   
 总结
