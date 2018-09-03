@@ -147,19 +147,19 @@ function select_sort($arr) {
 
 步骤：
 -------------------------------
-从第一个元素开始，该元素可以认为已经被排序  
-取出下一个元素（新元素），在已经排序的元素序列中从后向前扫描   
-如果扫描到的元素（已排序的元素）大于新元素，将该元素移到下一位置  
-重复步骤3，直到找到已排序的元素小于或者等于新元素的位置  
-将新元素插入到该位置中  
-重复步骤2  
+1) 从第一个元素开始，该元素可以认为已经被排序  
+2) 取出下一个元素（新元素），在已经排序的元素序列中从后向前扫描   
+3) 如果扫描到的元素（已排序的元素）大于新元素，将该元素移到下一位置  
+4) 重复步骤3，直到找到已排序的元素小于或者等于新元素的位置  
+5) 将新元素插入到该位置中  
+6) 重复步骤2  
 
 具体代码：
 --------------------------------
 function insert_sort($arr)
 {
     $len=count($arr);
-    
+
     for($i=1; $i<$len; $i++) {
         //获得当前需要比较的元素值。
         $tmp = $arr[$i];
@@ -194,17 +194,17 @@ function insert_sort($arr)
 顺序查找（数组里查找某个元素）
 =====================
 function seq_sch($array, $n, $k){
-     $array[$n] = $k;
-     for($i=0; $i<$n; $i++){
-          if( $array[$i]==$k){
-               break;
-          }
-     }
-     if ($i<$n){
-          return $i;
-     }else{
-          return -1;
-     }
+   $array[$n] = $k;
+   for($i=0; $i<$n; $i++){
+        if( $array[$i]==$k){
+             break;
+        }
+   }
+   if ($i<$n){
+        return $i;
+   } else {
+        return -1;
+   }
 }
 
 
@@ -212,17 +212,17 @@ function seq_sch($array, $n, $k){
 二分查找（数组里查找某个元素）
 =====================
 function bin_sch($array, $low, $high, $k){
-     if ( $low <= $high){
-          $mid = intval(($low+$high)/2 );
-          if ($array[$mid] == $k){
-               return $mid;
-          }elseif ( $k < $array[$mid]){
-               return bin_sch($array, $low, $mid-1, $k);
-          }else{
-               return bin_sch($array, $mid+ 1, $high, $k);
-          }
-     }
-     return -1;
+   if ( $low <= $high){
+        $mid = intval(($low+$high)/2 );
+        if ($array[$mid] == $k){
+             return $mid;
+        }elseif ( $k < $array[$mid]){
+             return bin_sch($array, $low, $mid-1, $k);
+        }else{
+             return bin_sch($array, $mid+ 1, $high, $k);
+        }
+   }
+   return -1;
 }
 
 
@@ -230,24 +230,24 @@ function bin_sch($array, $low, $high, $k){
 php写一个双向队列（腾讯）
 =====================
 <?php
-     class Deque{
-          private $queue=array();
+class Deque{
+    private $queue=array();
 
-          public function addFirst($item){
-               return array_unshift($this->queue,$item);
-          }
+    public function addFirst($item){
+         return array_unshift($this->queue,$item);
+    }
 
-          public function addLast($item){
-               return array_push($this->queue,$item);
-          }
+    public function addLast($item){
+         return array_push($this->queue,$item);
+    }
 
-          public function removeFirst(){
-               return array_shift($this->queue);
-          }
+    public function removeFirst(){
+         return array_shift($this->queue);
+    }
 
-          public function removeLast(){
-               return array_pop($this->queue);
-          }
+    public function removeLast(){
+         return array_pop($this->queue);
+    }
 }
 
 
@@ -256,39 +256,39 @@ php写一个双向队列（腾讯）
 <?php
 //二维数组排序，$arr是数据，$keys是排序的健值，$order是排序规则，1是降序，0是升序
 function array_sort($arr,$keys,$order=0){
-     if(!is_array($arr)){
-          return false;
-     }
+    if(!is_array($arr)){
+        return false;
+    }
 
-     $keysvalue=array();
-     foreach($arr as $key => $val){
-          $keysvalue[$key] = $val[$keys];
-     }
+    $keysvalue=array();
+    foreach($arr as $key => $val){
+        $keysvalue[$key] = $val[$keys];
+    }
 
-     if($order == 0){
-          asort($keysvalue);
-     }else{
-          arsort($keysvalue);
-     }
+    if($order == 0){
+        asort($keysvalue);
+    }else{
+        arsort($keysvalue);
+    }
 
-     reset($keysvalue);
-     foreach($keysvalue as $key => $vals){
-          $keysort[$key] = $key;
-     }
+    reset($keysvalue);
+    foreach($keysvalue as $key => $vals){
+        $keysort[$key] = $key;
+    }
 
-     $new_array=array();
-     foreach($keysort as $key=> $val){
-          $new_array[$key]=$arr[$val];
-     }
+    $new_array=array();
+    foreach($keysort as $key=> $val){
+        $new_array[$key]=$arr[$val];
+    }
 
-     return $new_array;
+    return $new_array;
 }
 
 // 测试
 $person=array(
-     array('id'=>2,'name'=>'zhangsan','age'=>23),
-     array('id'=>5,'name'=>'lisi','age'=>28),
-     array('id'=>3,'name'=>'apple','age'=>17)
+    array('id'=>2,'name'=>'zhangsan','age'=>23),
+    array('id'=>5,'name'=>'lisi','age'=>28),
+    array('id'=>3,'name'=>'apple','age'=>17)
 );
 $result = array_sort($person,'name',1);
 print_r($result);

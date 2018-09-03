@@ -31,6 +31,17 @@ function arraySortByKey($list, $order_key)
     return $list;
 }
 
+/**
+ * <br /> 标签换成\n 
+ * 注：与内置函数nl2br($str)功能相反
+ */
+function br2nl($text) {    
+    return preg_replace('/<br\\s*?\/??>/i', "\n", $text);   
+} 
+
+
+
+
 
 
 
