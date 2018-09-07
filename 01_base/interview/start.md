@@ -56,10 +56,6 @@ cookie与session区别
 
   
   
-索引算法Hash与BTree的区别
------------
-https://blog.csdn.net/u011305680/article/details/55520853  
-  
   
 
 memcache、redis 区别，及应用场景  
@@ -138,6 +134,10 @@ mysql方面的：
 -----------
 Myisam、InnoDB、memory  
 memory的特点是将表存到内存中，数度快，重启后数据丢失   
+  
+索引算法Hash与BTree的区别
+-----------
+https://blog.csdn.net/u011305680/article/details/55520853  
 
 
 
