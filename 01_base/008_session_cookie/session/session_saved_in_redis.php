@@ -47,8 +47,6 @@ gc  当php执行session垃圾回收机制时触发
 class SessionManager{
 
     private $redis;
-    private $sessionSavePath;
-    private $sessionName;
     private $sessionExpireTime=30;//redis，session的过期时间为30s
 
     public function __construct(){

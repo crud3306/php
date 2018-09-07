@@ -6,7 +6,7 @@
 
 
 
-// 算法1.简短系
+// 算法1. 简短系
 // ================
 
 foreach(glob('*.*') as $filename)
@@ -16,10 +16,10 @@ foreach(glob('*.*') as $filename)
 
 
 
-// 算法2.规矩系
+// 算法2. 规矩系
 // ================
-
-if($handle = opendir('C:\\Inetpub\\wwwroot\\test\\')){
+// 主要用到 opendir(string dir)， readdir(string dir)， closedir(string dir)
+if ($handle = opendir('C:\\Inetpub\\wwwroot\\test\\')) {
   echo "Files:\n";
   while (false !== ($file = readdir($handle))){
     echo "$file\n";
@@ -28,7 +28,7 @@ if($handle = opendir('C:\\Inetpub\\wwwroot\\test\\')){
 }
 
 
-// 算法3.函数系
+// 算法3. 函数系
 // ================
 
 function tree($directory)
@@ -53,69 +53,111 @@ function tree($directory)
 tree($dir);
 
 
-// 算法4.函数系II
+// 算法4. 递归输出某目录下的所有文件
 // ================
 function listDir($dir){
-  if(is_dir($dir)){
-    if ($dh = opendir($dir)) {
-      while (($file= readdir($dh)) !== false){
-        if((is_dir($dir."/".$file)) && $file!="." && $file!=".."){
-          echo "文件名：",$file;
-          listDir($dir."/".$file."/");
-        } else{
-          if($file!="." && $file!=".."){
-            echo $file;
-          }
-        }
+  if (!is_dir($dir)) {
+    return false;
+  }
+
+  if ($handle = opendir($dir)) {
+    while (($file= readdir($handle)) !== false){
+      if ($file == "." || $file == "..") {
+        continue;
       }
-      closedir($dh);
+
+      $curr_file = $dir.DIRECTORY_SEPARATOR.$file;
+
+      if (is_dir($curr_file)) {
+        echo "目录：", $file;
+        // 递归取下级目录
+        listDir($curr_file);
+
+      } else{
+        echo "文件：", $curr_file;
+      }
     }
+
+    closedir($handle);
   }
 }
 listDir($dir);
 
 
-// 算法5.递归系
+// 算法5. 递归获取某目录下的所有文件
 // ================
+function listDir($dir){
+  $arr = [];
 
-function file_list($dir,$pattern="")
-{
-  $arr=array();
-  $dir_handle=opendir($dir);
-  if($dir_handle)
-  {
-    while(($file=readdir($dir_handle))!==false)
-    {
-      if($file==='.' || $file==='..')
-      {
+  if (!is_dir($dir)) {
+    return $arr;
+  }
+
+  if ($handle = opendir($dir)) {
+    while (($file= readdir($handle)) !== false){
+      if ($file == "." || $file == "..") {
         continue;
       }
-      $tmp=realpath($dir.'/'.$file);
-      if(is_dir($tmp))
-      {
-        $retArr=file_list($tmp,$pattern);
-        if(!emptyempty($retArr))
-        {
-          $arr[]=$retArr;
-        }
-      } else
-      {
-        if($pattern==="" || preg_match($pattern,$tmp))
-        {
-          $arr[]=$tmp;
-        }
+
+      $curr_file = $dir.DIRECTORY_SEPARATOR.$file;
+
+      if (is_dir($curr_file)) {
+        // 当前目录
+        // $arr[] = $curr_file;
+        // 递归取下级目录
+        // $arr[] = listDir($curr_file);
+        $arr[$curr_file] = listDir($curr_file);
+
+      } else{
+        $arr[] = $curr_file;
       }
     }
-    closedir($dir_handle);
+
+    closedir($handle);
   }
+
   return $arr;
 }
-print_r(file_list("C:\\Inetpub\\wwwroot\\test\\"));
+$dir = '/data/my_web/test';
+var_dump(listDir($dir));
+
+
+// 算法6. 队列
+// ==================
+function listDirByQueue($dir){
+  $files = [];
+  $queue = [$dir];
+  while ($data=each($queue)) {
+    $path=$data['value'];
+
+    if(is_dir($path) && $handle=opendir($path)){
+      while(($file = readdir($handle)) !== false){
+        if ($file=='.'||$file=='..') {
+          continue;
+        }
+
+        $files[] = $real_path=$path.'/'.$file;
+
+        if (is_dir($real_path)) {
+          $queue[] = $real_path;
+        }
+      }
+
+      closedir($handle);
+    }
+    
+  }
+   return $files;
+}
+$dir = '/data/my_web/test';
+var_dump(listDirByQueue($dir));
+
 
 
 // 测试方法
 // ================
-我们采取在测试代码的头部和尾部添加如下的内容来检测执行时间，并测试5次取平均结果作为最终成绩。
+// 记录开始与结束时间，然后取差值。
+// 测试多次取平均结果作为最终成绩。
 
 $stime=microtime(true);
 //测试代码
@@ -123,7 +165,7 @@ $stime=microtime(true);
 //......
 $etime=microtime(true);
 $total=($etime-$stime)*1000;
-echo "{$total} Millisecond(s)";
+echo "{$total} Millisecond(s)".PHP_EOL;
 
 
 // 测试结果：
@@ -173,16 +215,13 @@ echo "{$total} Millisecond(s)";
 
 
 
-// 为什么算法2要比其他算法都高效一些呢？
-// ----------------
-// 实际上是因为算法中只使用了php中内置用来读取目录内容的函数“readdir()” 。除了算法1以外，其他算法在引用readdir()的时候，为了弥补函数的先天不足，干了很多其他的事情。
-
-
-
-// 如果说，我们需要指定扩展名的列举目录内所有文件的话。Rt推荐使用算法1的模式，我们将代码写成这样就可以了。
+// 结束语：
+// ================
+// 如果我们需要指定扩展名的列举目录内所有文件的话，推荐使用算法1的模式，代码如下：
 foreach(glob('*.需要的扩展名') as $filename)
 {
   echo 'Filename:'.$filename.;
 }
+// 如果取具体某一个目录下的文件，推荐算法2，如果需要取出所有子级，用4或5
 
 
