@@ -9,13 +9,20 @@ array array_slice( array $array , int $offset [, int $length = NULL [, bool $pre
 
 array array_splice ( array &$input , int $offset [, int $length = count($input) [, mixed $replacement = array() ]] )
 
+array array_merge ( array $array1 [, array $... ] )
+// 合并一个或多个数组，如果输入的数组中有相同的字符串键名，则该键名后面的值将覆盖前一个值。然而，如果数组包含数字键名，后面的值将不会覆盖原来的值，而是附加到后面。
+// 如果只给了一个数组并且该数组是数字索引的，则键名会以连续方式重新索引。
+
 array array_replace ( array $array1 , array $array2 [, array $... ] )
 
 array array_flip ( array $array )
+// 交换数组中的键和值，键名变成了值，而值成了键名。
 
 bool array_multisort ( array &$array1 [, mixed $array1_sort_order = SORT_ASC [, mixed $array1_sort_flags = SORT_REGULAR [, mixed $... ]]] )
+// 用来一次对多个数组进行排序，或者根据某一维或多维对多维数组进行排序。
 
-
+array array_fill ( int $start_index , int $num , mixed $value )
+// 用 value 参数的值将一个数组填充 num 个条目，键名由 start_index 参数指定的开始。
 
 
 
@@ -139,11 +146,16 @@ array_splice($input, -1, 1, array("black", "maroon"));
 // array array_intersect ( array $array1 , array $array2 [, array $... ] )
 // ===============
 // array_intersect() 返回一个数组，该数组包含了所有在 array1 中也同时出现在所有其它参数数组中的值。注意键名保留不变。
+// array_intersect()函数是求两个数的交集，返回一个交集共有元素的数组（只是数组值得比较）
+// array_intersect_assoc()函数是将键和值绑定，一起比较交集部分
+// array_intersect_key()函数是将两个数组的键值进行比较，返回的并不只有键值，而是键值和对应的数组值
 
 $array1 = array("a" => "green", "red", "blue");
 $array2 = array("b" => "green", "yellow", "red");
 $result = array_intersect($array1, $array2);
-print_r($result);
+$result1 = array_intersect_assoc($array1, $array2);
+$result2 = array_intersect_key($array1, $array2);
+var_dump($result, $result1, $result2);
 // 以上例程会输出
 Array
 (
@@ -245,6 +257,14 @@ $replacements2 = array(0 => "grape");
 
 $basket = array_replace($base, $replacements, $replacements2);
 print_r($basket);
+
+
+// PHP中array_merge 函数与 array+array的区别   
+// -----------
+// 区别如下：  
+// 当下标为数值时，array_merge()不会覆盖掉原来的值，但array＋array合并数组则会把最先出现的值作为最终结果返回，而把后面的数组拥有相同键名的那些值“抛弃”掉（不是覆盖）.   
+  
+// 当下标为字符时，array＋array仍然把最先出现的值作为最终结果返回，而把后面的数组拥有相同键名的那些值“抛弃”掉，但array_merge()此时会覆盖掉前面相同键名的值. 
 
 
 

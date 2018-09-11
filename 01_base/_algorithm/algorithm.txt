@@ -229,69 +229,80 @@ function bin_sch($array, $low, $high, $k){
 
 php写一个双向队列（腾讯）
 =====================
+地址：https://www.cnblogs.com/muziyun1992/p/6724028.html  
 <?php
 class Deque{
-    private $queue=array();
-
-    public function addFirst($item){
-         return array_unshift($this->queue,$item);
-    }
-
-    public function addLast($item){
-         return array_push($this->queue,$item);
-    }
-
-    public function removeFirst(){
-         return array_shift($this->queue);
-    }
-
-    public function removeLast(){
-         return array_pop($this->queue);
-    }
+  private $queue=array();
+  
+  function addFirst($item){//头入队
+    return array_unshift($this->queue,$item);
+  }
+  function addLast($item){//尾入队
+    return array_push($this->queue,$item);
+  }
+  function removeFirst(){//头出队
+    return array_shift($this->queue);
+  }
+  function removeLast(){//尾出队
+    return array_pop($this->queue);
+  }
+  function show(){//显示
+    echo implode(" ",$this->queue);
+  }
+  function clear(){//清空
+    unset($this->queue);
+  }
+  function getFirst(){
+    return array_shift($this->queue);
+  }
+  function getLast(){
+    return array_pop($this->queue);
+  }
+  function getLength(){
+    return count($this->queue);
+  }
 }
+$q=new Deque();
+$q->addFirst(1);
+$q->addLast(5);
+$q->removeFirst();
+$q->removeLast();
+$q->addFirst(2);
+$q->addLast(4);
+$q->show();
 
 
 写一个通用的二维数组排序
 =====================
 <?php
-//二维数组排序，$arr是数据，$keys是排序的健值，$order是排序规则，1是降序，0是升序
-function array_sort($arr,$keys,$order=0){
-    if(!is_array($arr)){
-        return false;
+function array_sort_by_any_column($list, $column_id, $order_type){
+    $array_temp = [];
+    foreach ($list as $key=>$value) {
+        $array_temp[$key] = $value[$column_id];
     }
 
-    $keysvalue=array();
-    foreach($arr as $key => $val){
-        $keysvalue[$key] = $val[$keys];
+    if ($order_type === "ASC"){ //顺序
+        asort($array_temp);
+    } else {
+        arsort($array_temp);
     }
 
-    if($order == 0){
-        asort($keysvalue);
-    }else{
-        arsort($keysvalue);
-    }
+    var_dump($array_temp);
 
-    reset($keysvalue);
-    foreach($keysvalue as $key => $vals){
-        $keysort[$key] = $key;
+    $result = [];
+    foreach($array_temp as $key=>$value){
+        $result[] = $list[$key];
     }
-
-    $new_array=array();
-    foreach($keysort as $key=> $val){
-        $new_array[$key]=$arr[$val];
-    }
-
-    return $new_array;
+    return $result;
 }
 
-// 测试
-$person=array(
-    array('id'=>2,'name'=>'zhangsan','age'=>23),
-    array('id'=>5,'name'=>'lisi','age'=>28),
-    array('id'=>3,'name'=>'apple','age'=>17)
+$arr = array(
+    array('num'=>5, 'value'=>6),
+    array('num'=>2, 'value'=>39),
+    array('num'=>36, 'value'=>29)
 );
-$result = array_sort($person,'name',1);
-print_r($result);
+$sortarr = array_sort_by_any_column($arr, 'num', 'ASC');
+print_r($sortarr);
 
 
 
