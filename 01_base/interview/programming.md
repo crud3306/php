@@ -285,6 +285,30 @@ function month_days_count($year, $month){
 }
 month_days_count(2018, 2);
 ```
+
+写一个递归函数完成以下功能：向函数中传一个多维数组，对数组中所有的值做判断
+，如果值是’number’则设置该值为0？(提示：该题考的是递归的应用，因为传入的数组不确定是多少维的，所以需要递归判断)
+---------
+function recursive_array($arr) {
+    if(is_array($arr)) {
+        foreach($arr as $key=>$value) {
+            if(is_array($value)) {
+               $arr[$key] = recursive_array($value);
+            } else {
+                if($value=='number') {
+                    $arr[$key] = '0'; 
+                }
+            }
+        }
+    } else {
+        if($value == 'number') {
+            return 0; 
+        } else {}
+    }
+
+    return $arr;
+} 
+
   
 取两个文件的相对路径
 -----------

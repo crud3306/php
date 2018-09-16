@@ -16,8 +16,8 @@ https://www.cnblogs.com/Wolfmanlq/p/5984494.html
 ============================
 基本概念：
 ============================
-关系数据库         ⇒ 数据库 (db)          ⇒ 表（table）       ⇒ 行 (line)           ⇒ 列(Columns)
-Elasticsearch    ⇒ 索引（index）         ⇒ 类型（type）      ⇒ 文档(document)       ⇒ 字段(Fields)
+关系数据库      ⇒ 数据库 (db)      ⇒ 表（table）    ⇒ 行 (line)       ⇒ 列(Columns)
+Elasticsearch  ⇒ 索引（index）    ⇒ 类型（type）   ⇒ 文档(document)   ⇒ 字段(Fields)
 
 
 ============================
