@@ -34,7 +34,7 @@ print_r() 返回值是bool，一般是true
 
 isset()、empty()、is_null() 区别
 -----------
-1）isset — 检测变量是否已设置且非 NULL则返回TRUE；  
+1）isset — 检测变量是否已设置且非NULL则返回TRUE；  
 注意的是 null 字符（"\0"）并不等同于 PHP 的 NULL 常量。  
 如果已经使用 unset() 释放了一个变量之后，它将不再是 isset()。  
 官方文档：http://php.net/manual/zh/function.isset.php  
@@ -51,7 +51,7 @@ FALSE
 array() (一个空数组)  
 $var; (一个声明了，但是没有值的变量)  
   
-3）is_null — 检测变量是否为 NULL，是则返回TRUE,否则返回FALSE.  
+3）is_null — 检测变量是否为 NULL，是则返回TRUE，否则返回FALSE。  
 在下列情况下一个变量被认为是 NULL：  
 被赋值为 NULL。  
 尚未被赋值。  
@@ -72,20 +72,29 @@ include 引入的文件有错误时，会继续执行，并返回一个警告。
 加_once后缀(如：require_once，include_once)表示已加载的不加载   
   
 
+
 cookie与session区别
 -----------
+1、cookie数据存放在客户的浏览器上，session数据放在服务器上。  
+2、cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗
+考虑到安全应当使用session。  
+3、session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能
+考虑到减轻服务器性能方面，应当使用COOKIE。  
+4、单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。
+
+cookie 和session 的联系：  
+session一般是借助cookie来传递sessionid。
   
+
 
 接口与类有什么区别
 -----------  
+1、接口类似于类，但接口的成员都没有执行方式；类除了这四种成员之外还可以有别的成员(如字段)。  
+2、不能实例化一个接口，接口只包括成员的签名；而类可以实例化(abstract类除外)。  
+3、接口没有构造函数，类有构造函数。  
+4、接口的成员没有任何修饰符，其成员总是公共的，而类的成员则可以有修饰符(如：虚拟或者静态)。  
+5、派生于接口的类必须实现接口中所有成员的执行方式，而从类派生则不然。  
 
-
-  
-  
-  
-
-memcache、redis 区别，及应用场景  
------------
 
 
 svn、git 区别
@@ -238,6 +247,33 @@ https://blog.csdn.net/u011305680/article/details/55520853
 
 nosql方面的：
 -----------
+
+memcache、redis 区别，及应用场景  
+-----------
+相同点  
+1 都是在内存中进行数据的存取
+2 都支持k/v的方式存取数据
+  
+不同点  
+1)、数据支持类型
+memcache只有string类型的数据。  
+Redis不仅仅支持简单的string类型数据，同时还提供list，set，hash等数据结构的存储。
+
+2)、存储方式
+Memecache把数据全部存在内存之中，断电后会数据会丢失。
+Redis支持数据的持久化，可以将内存中的数据保持在磁盘中，重启的时候可以再次加载进行使用。  
+3）value大小
+redis最大可以达到1GB，而memcache只有1MB
+
+4)、使用底层模型不同
+它们之间底层实现方式 以及与客户端之间通信的应用协议不一样。
+Redis直接自己构建了VM机制，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求。
+
+总结：
+1.Redis使用最佳方式是全部数据in-memory。  
+2.Redis更多场景是作为Memcached的替代者来使用。  
+3.当需要除key/value之外的更多数据类型支持时，使用Redis更合适。  
+4.当存储的数据不能被剔除时，使用Redis更合适。  
 
 
 
