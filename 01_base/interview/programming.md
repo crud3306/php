@@ -360,9 +360,13 @@ echo getRelativePath($path1, $path2).PHP_EOL;
 ------------
 ```php
 $fp = fopen("/tmp/lock.txt", "w+");
-if (flock($fp, LOCK_EX)) { // 进行排它型锁定
-    fwrite($fp,"Write something here\n");
-    flock($fp, LOCK_UN);// 释放锁定
+
+// 进行排它型锁定
+if (flock($fp, LOCK_EX)) { 
+    fwrite($fp, "Write something here\n");
+
+    // 释放锁定
+    flock($fp, LOCK_UN);
 
 } else {
     echo "Couldn't lock the file !";
