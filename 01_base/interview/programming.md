@@ -308,10 +308,11 @@ function recursive_array($arr) {
 
     return $arr;
 } 
-
+```
   
 取两个文件的相对路径
 -----------
+```php
 /** 计算path1 相对于 path2 的路径，即在path2引用paht1的相对路径
 * @param  String $path1
 * @param  String $path2
