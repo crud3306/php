@@ -1,5 +1,5 @@
 编程题
------------
+===========
 
 
 写一个函数得到header头信息
@@ -9,7 +9,7 @@ function getHeader()
 {
     $headers = [];
     foreach ($SERVER as $key => $value) {
-        if(strstr($key, 'HTTP')) {
+        if (strstr($key, 'HTTP')) {
             $newk = ucwords(strtolower(str_replace('_', '-', substr($key, 5))));
             $headers[$newk] = $value;
         }
@@ -19,6 +19,59 @@ function getHeader()
 }
 
 var_dump($headers);
+```
+
+PHP数字金额转大小格式，同时说明思路
+------------
+```php
+function daxie($num)
+{
+    $len_num = strlen($num);
+    if(!is_numeric($num) || $len_num < 0){
+        return '';
+    }
+
+    $da_num = array('零','一','二','三','四','五','六','七','八','九');
+    $return = '';
+
+    for($i=0; $i<$len_num; $i++){
+        $return .= $da_num[substr($num, $i, 1)];
+    }
+
+    return $return;
+}
+
+
+function floatohz($value){
+    $result = '';
+    $v_a = array('分','角','零','块','十',',百','千','万','十','百','千','亿');
+    $v_b = array('零','一','二','三','四','五','六','七','八','九','十');
+    $v_c = array();
+    $value = (string)$value;
+    $value = sprintf("%0.2f",$value);
+    $len = strlen($value);
+
+    for($i=$len;$i>=0;$i--){
+       $val=$value[$i];//$VALUE 不是数组
+       if($val!='.'){
+           if($val!='0')
+              $v_c[]=$v_b[$val].$v_a[$len-$i-1];
+       }
+    }
+
+    $v_c=array_reverse($v_c);
+    foreach($v_c as $val){
+       $result.=$val;
+    }
+    unset($v_a);unset($v_b);unset($v_c);
+
+    return $result;
+}
+ 
+//  $value='45123056.78';
+$value='23058.54';
+print floatohz($value);
+
 ```
   
   
@@ -219,9 +272,14 @@ var_dump(extname5($path));
 写一个函数，尽可能高效的从一个标准url中取出扩展名  
 -----------
 ```php
-$arr = parse_url('http://www.sina.com.cn/abc/de/fg.php?id=1');
-$result = pathinfo($arr['path']);
-var_dump($result['extension']);
+function get_ext($url)
+{
+    $arr = parse_url($url);
+    $result = pathinfo($arr['path']);
+    return $result['extension'];    
+}
+$url = 'http://www.sina.com.cn/abc/de/fg.php?id=1';
+var_dump(get_ext($url));
 ```
   
   
@@ -289,6 +347,7 @@ month_days_count(2018, 2);
 写一个递归函数完成以下功能：向函数中传一个多维数组，对数组中所有的值做判断
 ，如果值是’number’则设置该值为0？(提示：该题考的是递归的应用，因为传入的数组不确定是多少维的，所以需要递归判断)
 ---------
+```php
 function recursive_array($arr) {
     if(is_array($arr)) {
         foreach($arr as $key=>$value) {
@@ -303,7 +362,7 @@ function recursive_array($arr) {
     } else {
         if($value == 'number') {
             return 0; 
-        } else {}
+        }
     }
 
     return $arr;
