@@ -24,6 +24,7 @@ var_dump($headers);
 PHP数字金额转大小格式，同时说明思路
 ------------
 ```php
+// 简单的数字转大写
 function daxie($num)
 {
     $len_num = strlen($num);
@@ -41,7 +42,7 @@ function daxie($num)
     return $return;
 }
 
-
+// PHP数字金额转大写格式
 function floatohz($value){
     $result = '';
     $v_a = array('分','角','零','块','十',',百','千','万','十','百','千','亿');
