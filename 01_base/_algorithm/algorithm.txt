@@ -72,24 +72,24 @@ function quick_sort($arr)
 
      //递归出口:数组长度为1，直接返回数组
      $length = count($arr);
-     if($length<=1) return $arr;
+     if ($length <= 1) return $arr;
 
      //数组元素有多个,则定义两个空数组
      $left = $right = array();
      //使用for循环进行遍历，把第一个元素当做比较的对象
-     for($i=1; $i<$length; $i++)
+     for ($i = 1; $i < $length; $i++)
      {
           //判断当前元素的大小
-          if($arr[$i]<$arr[0]){
-               $left[]=$arr[$i];
-          }else{
-               $right[]=$arr[$i];
+          if ($arr[$i] < $arr[0]) {
+               $left[] = $arr[$i];
+          } else {
+               $right[] = $arr[$i];
           }
      }
 
      //递归调用
-     $left=quick_sort($left);
-     $right=quick_sort($right);
+     $left = quick_sort($left);
+     $right = quick_sort($right);
 
      //将所有的结果合并
      return array_merge($left, array($arr[0]), $right);
@@ -97,47 +97,6 @@ function quick_sort($arr)
 
 
 注：【冒泡排序】 和 【快速排序】 规属为 【交换排序】
-
-
-
-====================
-选择排序
-====================
-选择排序(Selection sort)是一种简单直观的排序算法。  
-它的工作原理如下：每次找出最大的元素的位置，然后和最后一位元素更换。
-或者：每次找出最小的元素的位置，然后和第一位元素更换。
-
-具体代码：
-------------------------------
-//实现思路 双重循环完成，外层控制轮数，当前的最小值。内层 控制的比较次数
-function select_sort($arr) 
-{
-     //$i 当前最小值的位置， 需要参与比较的元素
-     for($i=0, $len=count($arr); $i<$len-1; $i++) {
-          //先假设最小的值的位置
-          $p = $i;
-
-          //$j 当前都需要和哪些元素比较，$i 后边的。
-          for ($j=$i+1; $j<$len; $j++) {
-               //$arr[$p] 是 当前已知的最小值
-               if($arr[$p] > $arr[$j]) {
-                    //比较，发现更小的,记录下最小值的位置；
-                    //并且在下次比较时，应该采用已知的最小值进行比较。
-                    $p = $j;
-               }
-          }
-
-          //已经确定了当前的最小值的位置，保存到$p中。
-          //如果发现 最小值的位置与当前假设的位置$i不同，则位置互换即可
-          if($p != $i) {
-               $tmp = $arr[$p];
-               $arr[$p] = $arr[$i];
-               $arr[$i] = $tmp;
-          }
-     }
-     //返回最终结果
-     return $arr;
-}
 
 
 ====================
@@ -167,10 +126,10 @@ function insert_sort($arr)
         $tmp = $arr[$i];
 
         //内层循环控制 比较 并 插入
-        for($j=$i-1; $j>=0; $j--) {
+        for ($j=$i-1; $j>=0; $j--) {
 
             //$arr[$i];//需要插入的元素; $arr[$j];//需要比较的元素
-            if($tmp < $arr[$j]) {
+            if ($tmp < $arr[$j]) {
                 //发现插入的元素要小，交换位置
                 //将后边的元素与前面的元素互换
                 $arr[$j+1] = $arr[$j];
@@ -189,15 +148,60 @@ function insert_sort($arr)
 }
 
 
+
+====================
+选择排序
+====================
+选择排序(Selection sort)是一种简单直观的排序算法。  
+它的工作原理如下：每次找出最大的元素的位置，然后和最后一位元素更换。
+或者：每次找出最小的元素的位置，然后和第一位元素更换。
+
+具体代码：
+------------------------------
+//实现思路 双重循环完成，外层控制轮数，当前的最小值。内层 控制的比较次数
+function select_sort($arr) 
+{
+     //$i 当前最小值的位置， 需要参与比较的元素
+     for($i = 0, $len = count($arr); $i < $len-1; $i++) {
+          //先假设最小的值的位置
+          $p = $i;
+
+          //$j 当前都需要和哪些元素比较，$i 后边的。
+          for ($j=$i+1; $j<$len; $j++) {
+               //$arr[$p] 是 当前已知的最小值
+               if($arr[$p] > $arr[$j]) {
+                    //比较，发现更小的,记录下最小值的位置；
+                    //并且在下次比较时，应该采用已知的最小值进行比较。
+                    $p = $j;
+               }
+          }
+
+          //已经确定了当前的最小值的位置，保存到$p中。
+          //如果发现 最小值的位置与当前假设的位置$i不同，则位置互换即可
+          if ($p != $i) {
+               $tmp = $arr[$p];
+               $arr[$p] = $arr[$i];
+               $arr[$i] = $tmp;
+          }
+     }
+
+     //返回最终结果
+     return $arr;
+}
+
+
+
+
+
 =====================
 顺序查找（数组里查找某个元素）
 =====================
-function seq_sch($array, $n, $k)
+function seq_sch($array, $k)
 {   
    for($i=0; $i<$n; $i++){
-        if ($array[$i] == $k){
-             return $i;
-        }
+      if ($array[$i] == $k){
+         return $i;
+      }
    }
 
   return -1;
@@ -212,9 +216,9 @@ function bin_sch($array, $low, $high, $k){
         $mid = round(($low+$high)/2 );
         if ($array[$mid] == $k){
              return $mid;
-        }elseif ( $k < $array[$mid]){
+        } elseif ( $k < $array[$mid]){
              return bin_sch($array, $low, $mid-1, $k);
-        }else{
+        } else{
              return bin_sch($array, $mid+ 1, $high, $k);
         }
    }
@@ -228,7 +232,7 @@ php写一个双向队列（腾讯）
 地址：https://www.cnblogs.com/muziyun1992/p/6724028.html  
 <?php
 class Deque{
-  private $queue=array();
+  private $queue = array();
   
   function addFirst($item){//头入队
     return array_unshift($this->queue,$item);
@@ -236,17 +240,8 @@ class Deque{
   function addLast($item){//尾入队
     return array_push($this->queue,$item);
   }
-  function removeFirst(){//头出队
-    return array_shift($this->queue);
-  }
-  function removeLast(){//尾出队
-    return array_pop($this->queue);
-  }
-  function show(){//显示
-    echo implode(" ",$this->queue);
-  }
-  function clear(){//清空
-    unset($this->queue);
+  function getLength(){
+    return count($this->queue);
   }
   function getFirst(){
     return array_shift($this->queue);
@@ -254,15 +249,26 @@ class Deque{
   function getLast(){
     return array_pop($this->queue);
   }
-  function getLength(){
-    return count($this->queue);
+  /*
+  function removeFirst(){//头出队
+    return array_shift($this->queue);
   }
+  function removeLast(){//尾出队
+    return array_pop($this->queue);
+  }
+  */
+  function show(){//显示
+    echo implode(" ",$this->queue);
+  }
+  function clear(){//清空
+    unset($this->queue);
+  } 
 }
 $q=new Deque();
 $q->addFirst(1);
 $q->addLast(5);
-$q->removeFirst();
-$q->removeLast();
+$q->getFirst();
+$q->getLast();
 $q->addFirst(2);
 $q->addLast(4);
 $q->show();
@@ -283,7 +289,8 @@ function array_sort_by_any_column($list, $column_id, $order_type){
         arsort($array_temp);
     }
 
-    var_dump($array_temp);
+    // asort或arsort排序后，数据会重新排序，但原下标值不会变。正是因该下标不变，才可利用下标对二维数组排序
+    //var_dump($array_temp);
 
     $result = [];
     foreach($array_temp as $key=>$value){
@@ -303,13 +310,13 @@ print_r($sortarr);
 
 
 
-
-
-使对象可以像数组一样进行foreach循环，要求属性必须是私有。(Iterator模式的PHP5实现，写一类实现Iterator接口)（腾讯）
+使对象可以像数组一样进行foreach循环，要求属性必须是私有。
+(Iterator模式的PHP5实现，写一类实现Iterator接口)（腾讯）
 =====================
 <?php
-class Test implements Iterator{
-     private $item = array('id'=>1,'name'=>'php');
+class Test implements Iterator
+{
+     private $item = ['id'=>1,'name'=>'php'];
 
      public function rewind(){
           reset($this->item);
@@ -328,13 +335,19 @@ class Test implements Iterator{
      }
 
      public function valid(){
-          return($this->current()!==false);
+          return ($this->current() !== false);
      }
 }
 
 // 测试
-$t=new Test;
+$t = new Test;
 foreach($t as $k=>$v){
      echo$k,'--->',$v,'<br/>';
 }
+
+
+
+
+
+
 
