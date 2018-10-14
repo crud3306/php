@@ -8,6 +8,8 @@ https://www.cnblogs.com/hellohell/p/5718175.html
 https://www.jb51.net/article/92609.htm (需看)
 https://blog.csdn.net/aaroun/article/details/79132130 (需看)
 
+http://www.sohu.com/a/138837563_763273 （需看）
+
 ====================
 冒泡排序
 ====================
@@ -188,6 +190,141 @@ function select_sort($arr)
      //返回最终结果
      return $arr;
 }
+
+
+====================
+堆排序 （最大堆/最小堆）
+====================
+堆排序求升序用大顶堆，求降序用小顶堆。
+
+本例用求降序的小顶堆来解析。
+
+堆排序步骤如下：
+----------
+1、我们将数据（49、38、65、97、76、13、27、50）建立一个数组$arr；
+2、用数组$arr建立一个小顶堆（主要步骤，会在代码注释里解释，下图是用一个数组建立小顶堆的过程）；
+3、将堆的根（最小的元素）与最后一个叶子交换，并将堆长度减一，跳到第二步；
+4、重复2-3步，直到堆中只有一个结点，排序完成。
+
+实现：
+-----------
+//因为是数组,下标从0开始,所以,下标为n根结点的左子结点为2n+1,右子结点为2n+2;  
+//初始化值,建立初始堆
+$arr=array(49,38,65,97,76,13,27,50);
+$arrSize=count($arr);
+
+//将第一次排序抽出来，因为最后一次排序不需要再交换值了。
+buildHeap($arr, $arrSize);
+
+for($i=$arrSize-1; $i>0; $i--){
+    swap($arr,$i,0);
+    $arrSize--;
+    buildHeap($arr,$arrSize);   
+}
+
+//用数组建立最小堆
+function buildHeap(&$arr,$arrSize){
+    //计算出最开始的下标$index,如图,为数字"97"所在位置,比较每一个子树的父结点和子结点,将最小值存入父结点中
+    //从$index处对一个树进行循环比较,形成最小堆
+    for($index=intval($arrSize/2)-1; $index>=0; $index--){
+        //如果有左节点,将其下标存进最小值$min
+        if($index*2+1<$arrSize){
+            $min=$index*2+1;
+
+            //如果有右子结点,比较左右结点的大小,如果右子结点更小,将其结点的下标记录进最小值$min
+            if($index*2+2<$arrSize){
+                if($arr[$index*2+2]<$arr[$min]){
+                    $min=$index*2+2;
+                }
+            }
+
+            //将子结点中较小的和父结点比较,若子结点较小,与父结点交换位置,同时更新较小
+            if($arr[$min]<$arr[$index]){
+                swap($arr,$min,$index);
+            }   
+        }
+    }
+}
+
+//此函数用来交换下数组$arr中下标为$one和$another的数据
+function swap(&$arr,$one,$another){
+    $tmp=$arr[$one];
+    $arr[$one]=$arr[$another];
+    $arr[$another]=$tmp;
+}
+
+
+=====================
+希尔排序
+=====================
+基本思想：  
+希尔排序是指记录按下标的一定增量分组，对每一组使用 直接插入排序 ，随着增量逐渐减少，每组包含的关键字越来越多，当增量减少至 1 时，整个序列恰好被分成一组，算法便终止。
+
+操作步骤：  
+先取一个小于 n（序列记录个数） 的整数d1作为第一个增量，把文件的全部记录分组。所有距离为 d1 的倍数的记录放在同一个组中。先在各组内进行 直接插入排序；然后，取第二个增量 d2 < d1 重复上述的分组和排序，直至所取的增量 dt=1( dt < d(t-1) …< d2 < d1)，即所有记录放在同一组中进行 直接插入排序 为止.  
+<?php
+//希尔排序(对直接插入排序的改进)
+function ShellSort(array &$arr)
+{
+  $count = count($arr);
+  $inc = $count;  //增量
+  do {
+    //计算增量
+    //$inc = floor($inc / 3) + 1;
+    $inc = ceil($inc / 2);
+    for ($i = $inc; $i < $count; $i++) {
+      $temp = $arr[$i];  //设置哨兵
+      //需将$temp插入有序增量子表
+      for ($j = $i - $inc; $j >= 0 && $arr[$j + $inc] < $arr[$j]; $j -= $inc) {
+        $arr[$j + $inc] = $arr[$j]; //记录后移
+      }
+      //插入
+      $arr[$j + $inc] = $temp;
+    }
+    //增量为1时停止循环
+  } while ($inc > 1);
+}
+//$arr = array(9,1,5,8,3,7,4,6,2);
+$arr = array(49,38,65,97,76,13,27,49,55,04);
+ShellSort($arr);
+var_dump($arr);
+
+
+=====================
+归并排序
+=====================
+归并排序
+归并排序（MERGE-SORT）是建立在归并操作上的一种有效的排序算法,该算法是采用分治法（Divide and Conquer）的一个非常典型的应用。将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，称为二路归并。
+
+归并过程
+归并排序的核心就是如何将两个有序序列进行合并，假定有两个有序数组，比较两个有序数组的首个元素，谁小就取谁，并将该元素放入第三个数组中，取了之后在相应的数组中将删除此元素，依次类推，当取到一个数组已经没有元素时，就可将另一数组的剩余元素直接添加到第三个数组中。
+
+原理
+1、将序列每相邻两个数字进行归并操作，形成ceil(n/2)个序列，排序后每个序列包含两个元素,最后一个序列可能只有一个元素。
+2、将上述序列再次归并，形成ceil(n/4)个序列，每个序列包含四个元素，最后一个序列可能只有三个及以下元素。
+3、重复步骤2，直到所有元素排序完毕。
+
+<?php
+function merge_sort($arr){
+  $length=count($arr);
+  if($length<=1){
+    return $arr;
+  }
+  //分解数组，递归排序
+  $half=ceil($length/2);
+  $arr2=array_chunk($arr,$half);
+  $left=merge_sort($arr2[0]);
+  $right=merge_sort($arr2[1]);
+  while(count($left)&&count($right)){
+    if($left[0]<$right[0]){
+      $reg[]=array_shift($left);
+    }else{
+      $reg[]=array_shift($right);
+    }
+  }
+  return array_merge($reg,$left,$right);
+}
+
 
 
 
