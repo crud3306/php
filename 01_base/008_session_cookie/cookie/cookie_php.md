@@ -12,7 +12,6 @@ cookie 是服务器留在用户计算机中的小文件。每当相同的计算�
 -----------
 ```php
 // setcookie() 函数用于设置 cookie。
-
 // 注释：setcookie() 函数前不能有输出
 
 // 语法
@@ -23,7 +22,6 @@ setcookie('a', '123', time()+3600, '/', 'xxxx.com');
 
 // 例子
 //在下面的例子中，我们将创建名为 "user" 的 cookie，把为它赋值 "Alex Porter"。我们也规定了此 cookie 在一小时后过期：
-
 setcookie("user", "Alex Porter", time()+3600);
 
 // 注释：在发送 cookie 时，cookie 的值会自动进行 URL 编码，在取回时进行自动解码（为防止 URL 编码，请使用 setrawcookie() 取而代之）。
@@ -44,9 +42,7 @@ echo $_COOKIE["user"];
 // A way to view all cookies
 print_r($_COOKIE);
 
-
 // 在下面的例子中，我们使用 isset() 函数来确认是否已设置了 cookie：
-
 if (isset($_COOKIE["user"]))
 	echo "Welcome " . $_COOKIE["user"] . "!<br />";
 else
