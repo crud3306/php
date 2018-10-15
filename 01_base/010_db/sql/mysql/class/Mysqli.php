@@ -18,7 +18,7 @@ class Mysqli{
     private static function conn(){
         if(self::$link === null){
             $cfg = require './config.php';
-            self::$link = new Mysqli($cfg['host'],$cfg['user'],$cfg['pwd'],$cfg['db']);
+            self::$link = new Mysqli($cfg['host'], $cfg['user'], $cfg['pwd'], $cfg['db']);
             self::query("set names ".$cfg['charset']);//设置字符集
         }
         return self::$link;
@@ -41,6 +41,7 @@ class Mysqli{
     public static function getAll($sql){
         $data = array();
         $res = self::query($sql);
+        // fetch_assoc()；用关键字索引取值
         while($row = $res->fetch_assoc()){
             $data[] = $row;
         }   
@@ -54,6 +55,7 @@ class Mysqli{
      */ 
     public static function getRow($row){
         $res = self::query($sql);
+        // fetch_assoc()；用关键字索引取值
         return $res->fetch_assoc();
     }
 
@@ -64,6 +66,7 @@ class Mysqli{
      */     
     public static function getOne($sql){
         $res = self::query($sql);
+        // fetch_row()；用数字索引取值
         $data = $res->fetch_row();
         return $data[0];
     }
@@ -76,12 +79,13 @@ class Mysqli{
      * @param  str $where 更新条件
      * @return bool 插入/更新是否成功
      */
-    public static function exec($table,$data,$act='insert',$where='0'){
+    public static function exec($table, $data, $act='insert', $where='0'){
         //插入操作
         if($act == 'insert'){
             $sql = 'insert into '.$table;
             $sql .= ' ('.implode(',',array_keys($data)).')';
             $sql .= " values ('".implode("','",array_values($data))."')";
+
         }else if($act == 'update'){
             $sql = 'update '.$table.' set ';
             foreach ($data as $k => $v) {
