@@ -20,7 +20,9 @@ php-fpm.d/www.conf  （进程服务的扩展配置文件）
 注：php.ini配置文件在哪里？
 --------------
 通常php.ini的位置在：  
-/etc目录下或/usr/local/lib目录下。  
+/etc目录下  
+或  
+/usr/local/lib目录下。   
   
 如果你还是找不到php.ini或者找到了php.ini修改后不生效(其实是没找对)，请使用如下办法：  
 
@@ -105,7 +107,7 @@ value constant
 
 设置错误报告级别的方法：
 ==============
-1. 修改PHP的配置文件php.ini
+1）修改PHP的配置文件php.ini
 --------------
 这种方式设置error_reporting后，重启web服务器，就会永久生效。  
 
@@ -123,7 +125,7 @@ error_reporting=E_ALL & ~E_NOTICE
 保存，重启web服务器后生效。  
 
 
-2. 使用error_reporting()函数
+2）使用error_reporting()函数
 --------------
 这种方式设置后，可以立即生效。但仅限于在当前脚本中的error_reporting()函数调用的后面区域。  
 
