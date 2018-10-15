@@ -132,13 +132,13 @@ set_error_handler(array('class_name', 'function_name'));
 
 2：register_shutdown_function()  
 // -------------  
-捕获PHP的错误：Fatal Error、Parse Error等，这个方法是PHP脚本执行结束前最后一个调用的函数，比如脚本错误、die()、exit、异常、正常结束都会调用，多么牛逼的一个函数啊！通过这个函数就可以在脚本结束前判断这次执行是否有错误产生，这时就要借助于一个函数：error_get_last()；这个函数可以拿到本次执行产生的所有错误。
-error_get_last();返回的信息：  
-　　[type] - 错误类型
-　　[message] - 错误消息
-　　[file] - 发生错误所在的文件
-　　[line] - 发生错误所在的行
-
+捕获PHP的错误：Fatal Error、Parse Error等，这个方法是PHP脚本执行结束前最后一个调用的函数，比如脚本错误、die()、exit、异常、正常结束都会调用，多么牛逼的一个函数啊！通过这个函数就可以在脚本结束前判断这次执行是否有错误产生，这时就要借助于一个函数：error_get_last()；这个函数可以拿到本次执行产生的所有错误。  
+error_get_last();返回的信息：    
+　　[type] - 错误类型  
+　　[message] - 错误消息  
+　　[file] - 发生错误所在的文件  
+　　[line] - 发生错误所在的行  
+  
 例：
 ```php
 <?php
