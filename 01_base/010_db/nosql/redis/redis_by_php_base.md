@@ -1,11 +1,10 @@
 
 
+下面的例子都是基于php-redis这个扩展的。  
+更多命令：  
+https://blog.csdn.net/gb4215287/article/details/80073083  
+
 ```php
-/*
-下面的例子都是基于php-redis这个扩展的。
-更多命令：
-https://blog.csdn.net/gb4215287/article/details/80073083
-*/
 
 // 1，connect
 // ====================

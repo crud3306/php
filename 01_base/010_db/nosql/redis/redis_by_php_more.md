@@ -1,9 +1,9 @@
-<?php
 
 
+
+```php
 $redis = new redis();  
 $result = $redis->connect('127.0.0.1', 6379);  
-
 
 
 // 普通set/get操作
@@ -393,5 +393,5 @@ $server1 = $redis->getClientFor('first')->info();
 $server2 = $redis->getClientFor('second')->info();
 printf("Server '%s' has %d keys while server '%s' has %d keys.\n",
 'first', $server1['db15']['keys'], 'second', $server2['db15']['keys']
-
+```
 
