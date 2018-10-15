@@ -238,8 +238,9 @@ var_dump(sizeof($arr), count($arr));
 
 
 
-// array_rand 随机取指定个数的数组元素
-// ===============
+array_rand 随机取指定个数的数组元素
+-----------
+```php
 // mixed array_rand ( array $array [, int $num = 1 ] )
 // 从数组中取出一个或多个随机的单元，并返回随机条目的一个或多个键。 它使用了伪随机数产生算法，所以不适合密码学场景，
 
@@ -254,12 +255,12 @@ $arr = [1, 2, 3, 4];
 var_dump(array_rand($arr, 2));
 // 注意只取一个时，只返回键名；取多个时才返回的是数组
 var_dump(array_rand($arr, 1));
+```
 
 
-
-
-// array_replace — 使用传递的数组替换第一个数组的元素
-// ===============
+array_replace — 使用传递的数组替换第一个数组的元素
+------------
+```php
 // array array_replace ( array $array1 , array $array2 [, array $... ] )
 // array_replace() 函数使用后面数组元素相同 key 的值替换 array1 数组的值。如果一个键存在于第一个数组同时也存在于第二个数组，它的值将被第二个数组中的值替换。如果一个键存在于第二个数组，但是不存在于第一个数组，则会在第一个数组中创建这个元素。如果一个键仅存在于第一个数组，它将保持不变。如果传递了多个替换数组，它们将被按顺序依次处理，后面的数组将覆盖之前的值。
 $base = array("orange", "banana", "apple", "raspberry");
@@ -268,21 +269,25 @@ $replacements2 = array(0 => "grape");
 
 $basket = array_replace($base, $replacements, $replacements2);
 print_r($basket);
+```
 
 
-// PHP中array_merge 函数与 array+array的区别   
-// -----------
-// 区别如下：  
-// 当下标为数值时，array_merge()不会覆盖掉原来的值，但array＋array合并数组则会把最先出现的值作为最终结果返回，而把后面的数组拥有相同键名的那些值“抛弃”掉（不是覆盖）.   
+PHP中array_merge 函数与 array+array的区别   
+-----------
+区别如下：   
+当下标为数值时，array_merge()不会覆盖掉原来的值，但array＋array合并数组则会把最先出现的值作为最终结果返回，而把后面的数组拥有相同键名的那些值“抛弃”掉（不是覆盖）.    
   
-// 当下标为字符时，array＋array仍然把最先出现的值作为最终结果返回，而把后面的数组拥有相同键名的那些值“抛弃”掉，但array_merge()此时会覆盖掉前面相同键名的值. 
+当下标为字符时，array＋array仍然把最先出现的值作为最终结果返回，而把后面的数组拥有相同键名的那些值“抛弃”掉，但array_merge()此时会覆盖掉前面相同键名的值.   
 
 
 
-// array_product — 计算数组中所有值的乘积
+array_product — 计算数组中所有值的乘积
+------------
 // number array_product ( array $array )
 
-// array_sum() 将数组中的所有值相加，并返回结果。
+
+array_sum() 将数组中的所有值相加，并返回结果。
+------------
 // number array_sum ( array $array )
 
 
