@@ -623,7 +623,7 @@ if($a == true)
     $a_count++;  
 }
 ```
-不要尝试省略一些语法来缩短代码. 而是让你的逻辑简短.
+不要尝试省略一些语法来缩短代码. 而是让你的逻辑简短.  
 
 >>使用有高亮语法显示的文本编辑器. 高亮语法能让你减少错误.
 
@@ -632,7 +632,7 @@ if($a == true)
 ---------------
 比如说你想 trim 数组中的所有元素. 新手可能会:
 ```php
-foreach($arr as $c => $v)  
+foreach ($arr as $c => $v)  
 {  
     $arr[$c] = trim($v);  
 } 
@@ -672,13 +672,14 @@ xdebug和webgrid.
 24. 小心处理大数组
 ---------------
 对于大的数组和字符串, 必须小心处理. 常见错误是发生数组拷贝导致内存溢出,抛出Fatal Error of Memory size 信息:  
-```php
+
 $db_records_in_array_format; 
 // This is a big array holding 1000 rows from a table each having 20 columns , every row is atleast 100 bytes , so total 1000 * 20 * 100 = 2MB   
   
-$cc = $db_records_in_array_format; //2MB more  
-```
-some_function($cc); //Another 2MB ? 
+> $cc = $db_records_in_array_format; //2MB more  
+
+> some_function($cc); //Another 2MB ?   
+
 当导入或导出csv文件时, 常常会这么做.  
 
 不要认为上面的代码会经常因内存限制导致脚本崩溃. 对于小的变量是没问题的, 但处理大数组的时候就必须避免.
@@ -819,20 +820,21 @@ insert_record('users' , $data);
 30. 在head中使用base标签
 ---------------
 没听说过? 请看下面:
-```
+```html
+<html>
 <head> 
-<base href="http://www.domain.com/store/"> 
+  <base href="http://www.domain.com/store/"> 
 </head> 
 <body> 
-<img src="happy.jpg" /> 
+  <img src="happy.jpg" /> 
 </body> 
 </html> 
 ```
 base 标签非常有用. 假设你的应用分成几个子目录, 它们都要包括相同的导航菜单.
 
-www.domain.com/store/home.php
+www.domain.com/store/home.php  
 
-www.domain.com/store/products/ipad.php
+www.domain.com/store/products/ipad.php  
 
 在首页中, 可以写:
 ```
@@ -900,7 +902,7 @@ php > echo strtotime('2100-01-30');
 > set_time_limit(30);   
       
 //Rest of the code
-高枕无忧吗? 注意任何外部的执行, 如系统调用,socket操作, 数据库操作等, 就不在set_time_limits的控制之下.
+高枕无忧吗? 注意任何外部的执行, 如系统调用, socket操作, 数据库操作等, 就不在set_time_limits的控制之下.  
 
 因此, 就算数据库花费了很多时间查询, 脚本也不会停止执行. 视情况而定.
 
