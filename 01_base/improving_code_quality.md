@@ -55,26 +55,27 @@ require_once('helpers/utitlity_functions.php');
 ```php
 function load_class($class_name)  
 {  
- //path to the class file  
- $path = ROOT . '/lib/' . $class_name . '.php');  
- require_once( $path );  
+  //path to the class file  
+  $path = ROOT . '/lib/' . $class_name . '.php');  
+  require_once( $path );  
 }  
        
 load_class('Database');  
 load_class('Mail'); 
 ```
+
 有什么不一样吗? 该代码更具可读性.
 
 將来你可以按需扩展该函数, 如:
 ```php
 function load_class($class_name)  
 {  
-	//path to the class file  
+    //path to the class file  
     $path = ROOT . '/lib/' . $class_name . '.php');  
    
-	if (file_exists($path))  
+    if (file_exists($path))  
     {  
-		require_once( $path );  
+	    require_once( $path );  
     }  
 } 
 ```
@@ -97,16 +98,13 @@ function load_class($class_name)
 ```php
 define('ENVIRONMENT' , 'development');  
    
-if(! $db->query( $query )  
-{  
-   if(ENVIRONMENT == 'development')  
-   {  
-      echo "$query failed";  
+if (! $db->query( $query ) {  
+  if (ENVIRONMENT == 'development') {  
+    echo "$query failed";  
+
+  } else {  
+    echo "Database error. Please contact administrator";  
   }  
-   else  
-    {  
-       echo "Database error. Please contact administrator";  
-    }  
 } 
 ```
 在服务器中, 你只需改一下与置的值即可:
@@ -129,16 +127,17 @@ Uses :
 ```php
 function terminal($command)  
 {  
-    //system  
-   if(function_exists('system'))  
+   // system  
+   if (function_exists('system'))  
    {  
        ob_start();  
        system($command , $return_var);  
        $output = ob_get_contents();  
        ob_end_clean();  
    }  
-   //passthru  
-   else if(function_exists('passthru'))  
+
+   // passthru  
+   elseif (function_exists('passthru'))  
    {  
        ob_start();  
        passthru($command , $return_var);  
@@ -146,15 +145,15 @@ function terminal($command)
        ob_end_clean();  
    }  
   
-   //exec  
-   else if(function_exists('exec'))  
+   // exec  
+   elseif (function_exists('exec'))  
    {  
        exec($command , $output , $return_var);  
        $output = implode("\n" , $output);  
    }  
   
-   //shell_exec  
-   else if(function_exists('shell_exec'))  
+   // shell_exec  
+   elseif (function_exists('shell_exec'))  
    {  
        $output = shell_exec($command) ;  
    }  
@@ -165,7 +164,7 @@ function terminal($command)
        $return_var = 1;  
    }  
   
-   return array('output' => $output , 'status' => $return_var);  
+   return ['output' => $output , 'status' => $return_var];  
 }  
    
 terminal('ls'); 
@@ -189,6 +188,7 @@ function add_to_cart($item_id , $qty)
 {  
 	if (!is_array($item_id)) {  
         $_SESSION['cart']['item_id'] = $qty;  
+
 	} else {  
 		foreach($item_id as $i_id => $qty)  
 		{  
@@ -226,8 +226,9 @@ class super_class
     }  
 }  
 ?> 
-```
 // 闭合标签后面如果加了其它字符 super extra character after the closing tag 
+
+```
 
 index.php
 ```php
@@ -252,7 +253,7 @@ class super_class
 
 
 
-7. 在某地方收集所有输入, 一次输出给浏览器这称为输出缓冲, 假如说你已在不同的函数输出内容:
+7 在某地方收集所有输入, 一次输出给浏览器这称为输出缓冲, 假如说你已在不同的函数输出内容:
 ---------------
 ```php
 function print_header()  
@@ -301,7 +302,7 @@ echo print_footer();
 >> 输出给浏览器的同时又做php的处理很糟糕. 你应该看到过有些站点的侧边栏或中间出现错误信息. 知道为什么会发生吗? 因为处理和输出混合了.
 
 
-8. 发送正确的mime类型头信息, 如果输出非html内容的话。
+8 发送正确的mime类型头信息, 如果输出非html内容的话。
 ---------------
 输出一些xml.
 ```php
@@ -341,7 +342,7 @@ echo "#div id { background:#000; }";
 ```
 
 
-9. 为mysql连接设置正确的字符编码曾经遇到过在mysql表中设置了unicode/utf-8编码, phpadmin也能正确显示, 但当你获取内容并在页面输出的时候,会出现乱码. 这里的问题出在mysql连接的字符编码.
+9 为mysql连接设置正确的字符编码曾经遇到过在mysql表中设置了unicode/utf-8编码, phpadmin也能正确显示, 但当你获取内容并在页面输出的时候,会出现乱码. 这里的问题出在mysql连接的字符编码.
 ---------------
 ```php
 // Attempt to connect to database  
@@ -362,21 +363,21 @@ if(!mysqli_set_charset ( $c , 'UTF8' ))
 一旦连接数据库, 最好设置连接的 characterset. 你的应用如果要支持多语言, 这么做是必须的.  
 
 
-10. 使用 htmlentities 设置正确的编码选项php5.4前, 字符的默认编码是ISO-8859-1, 不能直接输出如À â等.
+10 使用 htmlentities 设置正确的编码选项php5.4前, 字符的默认编码是ISO-8859-1, 不能直接输出如À â等.
 ---------------
 > $value = htmlentities($this->value , ENT_QUOTES , CHARSET);  
 
 php5.4以后, 默认编码为UTF-8, 这將解决很多问题. 但如果你的应用是多语言的, 仍然要留意编码问题,.  
 
 
-11. 不要在应用中使用gzip压缩输出, 让apache处理考虑过使用 ob_gzhandler 吗? 不要那样做. 毫无意义.   
+11 不要在应用中使用gzip压缩输出, 让apache处理考虑过使用 ob_gzhandler 吗? 不要那样做. 毫无意义.   
 php只应用来编写应用. 不应操心服务器和浏览器的数据传输优化问题.  
 ---------------
 使用apache的mod_gzip/mod_deflate 模块压缩内容。  
 
 
 
-12. 使用json_encode输出动态javascript内容时常会用php输出动态javascript内容:
+12 使用json_encode输出动态javascript内容时常会用php输出动态javascript内容:
 ---------------
 ```php
 $images = array(  
@@ -384,14 +385,14 @@ $images = array(
 );  
 
 $js_code = '';  
-foreach($images as $image)  
+foreach ($images as $image)  
 {  
 	$js_code .= "'$image' ,";  
 }  
 $js_code = 'var images = [' . $js_code . ']; ';  
 echo $js_code;  
 
-//Output is var images = ['myself.png' ,'friends.png' ,'colleagues.png' ,]; 
+// Output is var images = ['myself.png' ,'friends.png' ,'colleagues.png' ,]; 
 ```
 
 更聪明的做法, 使用 json_encode:
@@ -403,8 +404,8 @@ $js_code = 'var images = ' . json_encode($images);
 echo $js_code;  
 
 //Output is : var images = ["myself.png","friends.png","colleagues.png"] 
-优雅乎?
 ```
+优雅乎?
 
 
 13. 写文件前, 检查目录写权限写或保存文件前, 确保目录是可写的, 假如不可写, 输出错误信息. 这会节约你很多调试时间. linux系统中, 需要处理权限, 目录权限不当会导致很多很多的问题, 文件也有可能无法读取等等.
@@ -418,9 +419,9 @@ file_put_contents($file_path , $contents);
 ```
 这大体上正确. 但有些间接的问题. file_put_contents 可能会由于几个原因失败:
 
->> 父目录不存在
->> 目录存在, 但不可写
->> 文件被写锁住?
+>> 父目录不存在  
+>> 目录存在, 但不可写  
+>> 文件被写锁住?  
 
 所以写文件前做明确的检查更好.
 ```php
@@ -443,10 +444,10 @@ else
 14. 更改应用创建的文件权限在 linux环境中, 权限问题可能会浪费你很多时间. 从今往后, 无论何时, 当你创建一些文件后, 确保使用chmod设置正确权限. 否则的话, 可能文件先是由"php"用户创建, 但你用其它的用户登录工作, 系统將会拒绝访问或打开文件, 你不得不奋力获取root权限, 更改文件的权限等等.
 ---------------
 // Read and write for owner, read for everybody else  
-chmod("/somedir/somefile", 0644);    
+> chmod("/somedir/somefile", 0644);    
    
 // Everything for owner, read and execute for others  
-chmod("/somedir/somefile", 0755);   
+> chmod("/somedir/somefile", 0755);   
 
 
 
@@ -520,8 +521,7 @@ function session_get($key)
 {  
     $k = APP_ID . '.' . $key;  
    
-    if(isset($_SESSION[$k]))  
-    {  
+    if (isset($_SESSION[$k])) {  
         return $_SESSION[$k];  
     }  
     
@@ -543,42 +543,43 @@ function session_set($key , $value)
 ---------------
 假如你在某文件中定义了很多工具函数:
 ```php
-01  function utility_a()  
-02  {  
-03      //This function does a utility thing like string processing  
-04  }  
-05     
-06  function utility_b()  
-07  {  
-08      //This function does nother utility thing like database processing  
-09  }  
-10     
-11  function utility_c()  
-12  {  
-13      //This function is ...  
-14  }
+function utility_a()  
+{  
+    //This function does a utility thing like string processing  
+}  
+   
+function utility_b()  
+{  
+    //This function does nother utility thing like database processing  
+}  
+   
+function utility_c()  
+{  
+    //This function is ...  
+}
 ``` 
+
 这些函数的使用分散到应用各处. 你可能想將他们封装到某个类中:
 ```php
-01  class Utility  
-02  {  
-03      public static function utility_a()  
-04      {  
-05     
-06      }  
-07     
-08      public static function utility_b()  
-09      {  
-10     
-11      }  
-12     
-13      public static function utility_c()  
-14      {  
-15     
-16      }  
-17  }  
-18     
-19  //and call them as  
+class Utility  
+{  
+    public static function utility_a()  
+    {  
+   
+    }  
+   
+    public static function utility_b()  
+    {  
+   
+    }  
+   
+    public static function utility_c()  
+    {  
+   
+    }  
+}  
+    
+//and call them as  
 
 $a = Utility::utility_a();  
 $b = Utility::utility_b(); 
