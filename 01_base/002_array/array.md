@@ -126,18 +126,23 @@ array_splice 去掉数组中的某一部分并用其它值取代
 
 $input = array("red", "green", "blue", "yellow");
 array_splice($input, 2);
+var_dump($input);
 // $input is now array("red", "green")
 
 $input = array("red", "green", "blue", "yellow");
 array_splice($input, 1, -1);
+var_dump($input);
 // $input is now array("red", "yellow")
 
 $input = array("red", "green", "blue", "yellow");
 array_splice($input, 1, count($input), "orange");
+var_dump($input);
 // $input is now array("red", "orange")
 
 $input = array("red", "green", "blue", "yellow");
 array_splice($input, -1, 1, array("black", "maroon"));
+var_dump($input);
+// $input is now array("red", "green", "blue", "black", "marnoon")
 ```
 
 
@@ -147,6 +152,12 @@ array_flip — 交换数组中的键和值
 ```php
 // array array_flip ( array $array )
 // array_flip() 返回一个反转后的 array，例如 array 中的键名变成了值，而 array 中的值成了键名。
+$arr = [
+    'a' => '1',
+    'b' => '2'
+];
+array_flip($arr);
+var_dump($arr);
 ```
 
 
@@ -229,7 +240,7 @@ var_dump($data)
 ```
 
 
-sizeof($arr) 是count($arr)的别名，取数组长度
+sizeof($arr) 是 count($arr)的别名，取数组长度
 -----------
 ```php
 $arr = [1, 2, 3, 4];
