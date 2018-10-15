@@ -73,9 +73,8 @@ $redis->dbsize();
 
 
 
-/*
-队列操作
-*/
+
+// 队列操作
 // ====================
 //rpush/rpushx 有序列表操作,从队列后插入元素
 //lpush/lpushx 和rpush/rpushx的区别是插入到队列的头部,同上,'x'含义是只对已存在的key进行操作
@@ -119,9 +118,7 @@ $redis->blpop('list3',10); //如果list3为空则一直等待,直到不为空时
 
 
 
-/**
-set表操作
-*/
+// set表操作
 // ====================
 //sadd 增加元素,返回true,重复返回false
 $redis->sadd('set1','ab');
@@ -164,9 +161,8 @@ $redis->sinterstore('foo',array('set1','set2')); //将'set1'和'set2'中相同�
 $redis->srandmember('set1');
 
 
-/**
-有序set表操作
-*/
+
+// 有序set表操作
 // ====================
 //sadd 增加元素,并设置序号,返回true,重复返回false
 $redis->zadd('zset1',1,'ab');
@@ -209,9 +205,8 @@ $redis->zrank('zset1','ef');//返回0,因为它是第一个元素;zrevrank则返
 $redis->zremrangebyrank('zset1',0,10); //删除位置为0-10的元素,返回删除的元素个数2
 
 
-/**
-hash表操作
-*/
+
+// hash表操作
 // ====================
 //hset/hget 存取hash表的数据
 $redis->hset('hash1','key1','v1'); //将key为'key1' value为'v1'的元素存入hash1表
@@ -241,9 +236,8 @@ $redis->hvals('hash1'); //返回array('v1','v2','v3','v4',13)
 $redis->hgetall('hash1'); //返回array('key1'=>'v1','key2'=>'v2','key3'=>'v3','key4'=>'v4','key5'=>13)
 
 
-/**
-排序操作
-*/
+
+// 排序操作
 // ====================
 //sort 排序
 $redis->rpush('tab',3);
@@ -258,9 +252,8 @@ $redis->sort('tab',array('limit' => array('store' => 'ordered'))); //表示永�
 $redis->sort('tab',array('limit' => array('get' => 'pre_*'))); //使用了通配符'*'过滤元素,表示只返回以'pre_'开头的元素
 
 
-/**
-redis管理操作
-*/
+
+// redis管理操作
 // ====================
 //select 指定要操作的数据库
 $redis->select('mydb'); //指定为mydb,不存在则创建
@@ -294,7 +287,7 @@ print_r($retval);
 
 
 
-//批量操作
+// 批量操作
 $replies = $redis->pipeline(function($pipe) {
 	$pipe->ping();
 	$pipe->flushdb();
@@ -309,7 +302,7 @@ print_r($replies);
 
 
 
-//CAS,事务性操作
+// CAS,事务性操作
 function zpop($client, $zsetKey) {
 $element = null;
 $options = array(

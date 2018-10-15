@@ -16,5 +16,6 @@ http://www.cnblogs.com/bsfz/p/7824428.html
 
 预占库存，即内部有预扣逻辑
 update 时的 where 条件 and (库存数 - 本次预购数)> 0
+
 redis
 
