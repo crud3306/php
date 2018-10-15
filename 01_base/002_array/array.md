@@ -1,6 +1,8 @@
-<?php
 
-// 常用
+
+常用
+-----------
+```php
 array array_filter ( array $array [, callable $callback [, int $flag = 0 ]] )
 
 array array_map ( callable $callback , array $array1 [, array $... ] )
@@ -23,12 +25,13 @@ bool array_multisort ( array &$array1 [, mixed $array1_sort_order = SORT_ASC [, 
 
 array array_fill ( int $start_index , int $num , mixed $value )
 // 用 value 参数的值将一个数组填充 num 个条目，键名由 start_index 参数指定的开始。
+```
 
 
 
-
-// 过滤数组 array_filter
-// ===============
+过滤数组 array_filter
+---------
+```php
 // array array_filter ( array $array [, callable $callback [, int $flag = 0 ]] )
 // 依次将 array 数组中的每个值传递到 callback 函数。如果 callback 函数返回 true，则 array 数组的当前值会被包含在返回的结果数组中。数组的键名保留不变。
 // 如果没有提供 callback 函数， 将删除 array 中所有等值为 FALSE 的条目。更多信息见转换为布尔值。
@@ -61,12 +64,13 @@ function _f($v) {
 var_dump(array_filter($a, "_f"));
 // 因数组键名保持不变，所以如果是数字索引会不连接，这时这里再用一次array_values()来处理返回的数组
 var_dump(array_values(array_filter($a, "_f")));
+```
 
 
 
-
-// array_map 快速处理数组，返回外理后的新数组
-// ===============
+array_map 快速处理数组，返回外理后的新数组
+-------------
+```php
 // array array_map ( callable $callback , array $array1 [, array $... ] )
 // array_map()：返回数组，是为 array1 每个元素应用 callback函数之后的数组。 callback 函数形参的数量和传给 array_map() 数组数量，两者必须一样。
 
@@ -82,11 +86,12 @@ $arr = array_map('trim' , $arr);
 // 可以对比 array_map 与 array_walk  
 // array_map    主要是为了得到你的回调函数处理后的新数组，要的是结果。
 // array_walk   主要是对每个参数都使用一次你的回调函数，要的是处理的过程。
+```
 
 
-
-// array_slice
-// ===============
+array_slice
+------------
+```php
 // array array_slice( array $array , int $offset [, int $length = NULL [, bool $preserve_keys = false ]] )
 // array_slice() 返回根据 offset 和 length 参数所指定的 array 数组中的一段序列。
 // 参数 
@@ -107,12 +112,13 @@ $input = array("a", "b", "c", "d", "e");
 $output = array_slice($input, 2);      // returns "c", "d", and "e"
 $output = array_slice($input, -2, 1);  // returns "d"
 $output = array_slice($input, 0, 3);   // returns "a", "b", and "c"
+```
 
 
 
-
-// array_splice 去掉数组中的某一部分并用其它值取代
-// ===============
+array_splice 去掉数组中的某一部分并用其它值取代
+------------
+```php
 // array array_splice ( array &$input , int $offset [, int $length = count($input) [, mixed $replacement = array() ]] )
 // 把 input 数组中由 offset 和 length 指定的单元去掉，如果提供了 replacement 参数，则用其中的单元取代。
 
@@ -132,19 +138,21 @@ array_splice($input, 1, count($input), "orange");
 
 $input = array("red", "green", "blue", "yellow");
 array_splice($input, -1, 1, array("black", "maroon"));
+```
 
 
 
-
-// array_flip — 交换数组中的键和值
-// ===============
+array_flip — 交换数组中的键和值
+---------
+```php
 // array array_flip ( array $array )
 // array_flip() 返回一个反转后的 array，例如 array 中的键名变成了值，而 array 中的值成了键名。
+```
 
 
-
-// array array_intersect ( array $array1 , array $array2 [, array $... ] )
-// ===============
+array array_intersect ( array $array1 , array $array2 [, array $... ] )
+---------
+```php
 // array_intersect() 返回一个数组，该数组包含了所有在 array1 中也同时出现在所有其它参数数组中的值。注意键名保留不变。
 // array_intersect()函数是求两个数的交集，返回一个交集共有元素的数组（只是数组值得比较）
 // array_intersect_assoc()函数是将键和值绑定，一起比较交集部分
@@ -162,11 +170,13 @@ Array
     [a] => green
     [0] => red
 )
+```
 
 
 
-// array_multisort — 对多个数组或多维数组进行排序
-// ===============
+array_multisort — 对多个数组或多维数组进行排序
+------------
+```php
 // bool array_multisort ( array &$array1 [, mixed $array1_sort_order = SORT_ASC [, mixed $array1_sort_flags = SORT_REGULAR [, mixed $... ]]] )
 
 // array_multisort() 可以用来一次对多个数组进行排序，或者根据某一维或多维对多维数组进行排序。
@@ -216,14 +226,15 @@ foreach ($data as $key => $row) {
 // 把 $data 作为最后一个参数，以通用键排序
 array_multisort($ids, SORT_DESC, $cats, SORT_ASC, $list);
 var_dump($data)
+```
 
 
-
-// sizeof($arr) 是count($arr)的别名，取数组长度
-// ===============
+sizeof($arr) 是count($arr)的别名，取数组长度
+-----------
+```php
 $arr = [1, 2, 3, 4];
 var_dump(sizeof($arr), count($arr));
-
+```
 
 
 
