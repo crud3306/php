@@ -42,7 +42,7 @@ class Upload{
      * @return bool 文件大小是否超过限制
      */
     public function checkSize($size){
-        return $size < $this->maxSize * 1024 * 1024;
+        return $size <= $this->maxSize * 1024 * 1024;
     }
 
     /**
@@ -51,7 +51,8 @@ class Upload{
      * @return str 随机字符串
      */
     public function randName($len=6){
-        return substr(str_shuffle('abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ234565789'),0,$len);
+        return substr(str_shuffle('abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ234565789'), 
+            0, $len);
     }
 
     /**
@@ -60,7 +61,8 @@ class Upload{
      */ 
     public function createDir(){
         $dir = './upload/'.date('Y/m/d',time());
-        if(is_dir($dir) || mkdir($dir,0777,true)){
+        // mkdir第三个参数为true，则可以创建多个目录
+        if (is_dir($dir) || mkdir($dir, 0777, true)) {
             return $dir;
         }
     }
@@ -71,27 +73,29 @@ class Upload{
      * @return arr 文件上传信息
      */
     public function uploadFile($flag){
-        if($_FILES[$flag]['name'] === '' || $_FILES[$flag]['error'] !== 0){
+        if ($_FILES[$flag]['name'] === '' || $_FILES[$flag]['error'] !== 0) {
             echo "没有上传文件";
             return;
         }
+
         $info = $this->getInfo($flag);
         if(!$this->checkExt($info['name'])){
             echo "不支持的文件类型";
             return;
         }
+
         if(!$this->checkSize($info['size'])){
             echo "文件大小超过限制";
             return;
         }
+
         $filename = $this->randName().'.'.$this->getExt($info['name']);
         $dir = $this->createDir();
-        if(!move_uploaded_file($info['tmp_name'], $dir.'/'.$filename)){
+        if (!move_uploaded_file($info['tmp_name'], $dir.'/'.$filename)) {
             echo "文件上传失败";
-        }else{
-            return array('filename'=>$filename,'dir'=>$dir);
         }
+        
+        return array('filename'=>$filename,'dir'=>$dir);
     }
-
 }
 

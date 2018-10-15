@@ -92,7 +92,7 @@ class Thumb{
      */
     public function saveFile($image){
         $method = "image".$this->getType();
-        $method($image,$this->thumbPath);
+        $method($image, $this->thumbPath);
     }
 
     /**
