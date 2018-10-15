@@ -12,7 +12,7 @@ https://blog.csdn.net/json_ligege/article/details/78563597
 1、修改php.ini  
 在php.ini中找到data.timezone = 去掉它前面的;号，
 然后设置
-> data.timezone = "Asia/Shanghai"; //即可  
+> data.timezone = "Asia/Shanghai";   
 
 
 2、在程序PHP 5以上版本的程序代码中使用函数  
