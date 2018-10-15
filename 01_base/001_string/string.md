@@ -20,7 +20,7 @@
 // string ucfirst(str)  把字符串中的首字符转换为大写
 // string ucwords(str)  把字符串中每个单词的首字符转换为大写
 
-// string substr(string,start,length)
+// string substr(string, start, length)
 // 参数start：
 // 正数 - 在字符串的指定位置开始
 // 负数 - 在从字符串结尾开始的指定位置开始，最后一位是-1。
@@ -30,13 +30,13 @@
 // 负数 - 从字符串末端返回的长度，最后一位是-1。
 
 
-// string str_split(string,length)	把字符串分割到数组中，
+// string str_split(string, length)	把字符串分割到数组中，
 // 参数length：规定每个数组元素的长度，默认是 1。
 // 如果 length 小于 1，则 str_split() 函数将返回 FALSE。
 // 如果 length 大于字符串的长度，则整个字符串将作为数组的唯一元素返回。
 
 
-// string str_pad(string,length,pad_string,pad_type) 把字符串填充为新的长度
+// string str_pad(string, length, pad_string, pad_type) 把字符串填充为新的长度
 // length	必需。规定新的字符串长度。如果该值小于字符串的原始长度，则不进行任何操作。
 // pad_string	可选。规定供填充使用的字符串。默认是空白。
 // pad_type	可选。规定填充字符串的哪边。
@@ -45,16 +45,16 @@
 // STR_PAD_LEFT - 填充字符串的左侧。
 // STR_PAD_RIGHT - 填充字符串的右侧。默认。
 
-// string str_repeat(string,repeat) 把字符串重复指定的次数，repeat必须大于等于0。
+// string str_repeat(string, repeat) 把字符串重复指定的次数，repeat必须大于等于0。
 
 
 // string implode(separator, array)	 返回由数组元素组合成的字符串。
 // string join(separator, array)     是implode()的别名。
 
 
-// string trim(string,charlist)  
-// string ltrim(string,charlist)   
-// string rtrim(string,charlist)  
+// string trim(string, charlist)  
+// string ltrim(string, charlist)   
+// string rtrim(string, charlist)  
 // 参数charlist：	
 // 可选。规定从字符串中删除哪些字符。如果省略，则移除下列所有字符：
 // "\0" - NULL
@@ -64,10 +64,10 @@
 // "\r" - 回车
 // " " - 空格
 
-// string strip_tags(string,allow)  剥去字符串中的 HTML、XML 以及 PHP 的标签
+// string strip_tags(string, allow)  剥去字符串中的 HTML、XML 以及 PHP 的标签
 // 参数allow	：可选，规定允许的标签。这些标签不会被删除。
 
-// string htmlspecialchars(string,flags,character-set,double_encode)
+// string htmlspecialchars(string, flags, character-set, double_encode)
 // 把预定义的字符转换为 HTML 实体
 // 预定义的字符是：
 // & （和号）成为 &
@@ -76,11 +76,11 @@
 // < （小于）成为 <
 // > （大于）成为 >
 
-// htmlspecialchars_decode(string,flags) 函数把预定义的 HTML 实体转换为字符。
+// htmlspecialchars_decode(string, flags) 函数把预定义的 HTML 实体转换为字符。
 
 
 
-// parse_str(string,array) 把查询字符串解析到变量中
+// parse_str(string, array) 把查询字符串解析到变量中
 // 参数array：可选，规定存储变量的数组的名称。该参数指示变量将被存储到数组中。
 // 如果不设array参数，则由该函数设置的变量将覆盖已存在的同名变量
 // 例：
@@ -125,14 +125,14 @@ echo("2 $str 2 $str2 4");
 
 ```php
 $str = '国人。';
-var_dump(strlen($str), mb_strlen($str));
-/*  
+var_dump(strlen($str), mb_strlen($str)); 
 ```
 输出：  
-11 、7  
+int(9)   
+int(3)    
   
 结果分析：  
-PHP内置的字符串长度函数strlen无法正确处理中文字符串，它得 到的只是字符串所占的字节数。  
+PHP内置的字符串长度函数strlen无法正确处理中文字符串，它得到的只是字符串所占的字节数。  
 GB2312编码下，一个汉字占2个字节；  
 UTF-8编码下，一个汉字占3个字节  
   
