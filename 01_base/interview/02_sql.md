@@ -2,18 +2,57 @@
 mysql方面的：
 ===========
 
+
+PHP如何防止sql注入
+-----------
+
+
+
 请说出mysql常用存储引擎？memory存储引擎的特点？  
 -----------
 Myisam、InnoDB、memory  
 memory的特点是将表存到内存中，数度快，重启后数据丢失   
 
-myisam
-不支持事务，表锁
-存储文件位置
 
-InnoDB
-支持事务，行锁
-存储文件位置
+myisam与innodb的区别及选择
+-----------
+区别：
+
+InnoDB:  
+	支持事务  
+	支持行锁  
+	支持外键  
+	不支持FULLTEXT类型的索引  
+	存储文件位置不同  
+		> .frm文件：存储数据表的框架结构  
+		> .ibd文件  
+	DELETE 表时，是一行一行的删除  
+
+myisam:  
+	不支持事务  
+	表锁  
+	不支持外键  
+	支持FULLTEXT类型的索引  
+	存储文件位置不同  
+		> .frm文件：存储数据表的框架结构  
+		> .MYD文件：即MY Data，表数据文件    
+		> .MYI文件：即MY Index，索引文件    
+	DELETE 表时，先drop表，然后重建表  
+
+
+
+选择：  
+
+因为MyISAM相对简单所以在效率上要优于InnoDB.如果系统读多，写少。对原子性要求低。那么MyISAM最好的选择。且MyISAM恢复速度快。可直接用备份覆盖恢复。 
+
+如果系统读少，写多的时候，尤其是并发写入高的时候。InnoDB就是首选了。 
+
+两种类型都有自己优缺点，选择那个完全要看自己的实际类弄。  
+
+
+
+
+
 
 
 
@@ -111,22 +150,3 @@ Redis直接自己构建了VM机制，因为一般的系统调用系统函数的�
 
 
 
-linux：
------------
-
-
-
-
-服务器
------------
-Apache与Nginx的优缺点比较
------------
-1、nginx相对于apache的优点：
-轻量级，比apache 占用更少的内存及资源。高度模块化的设计，编写模块相对简单  
-抗并发，nginx 处理请求是异步非阻塞，多个连接（万级别）可以对应一个进程，而apache 则是阻塞型的，是同步多进程模型，一个连接对应一个进程，在高并发下nginx   能保持低资源低消耗高性能  
-nginx处理静态文件好，Nginx 静态处理性能比 Apache 高 3倍以上  
-  
-2、apache 相对于nginx 的优点：  
-apache 的rewrite 比nginx 的rewrite 强大 ，模块非常多，基本想到的都可以找到 ，比较稳定，少bug ，nginx 的bug 相对较多  
-  
-3：原因：这得益于Nginx使用了最新的epoll（Linux 2.6内核）和kqueue（freebsd）网络I/O模型，而Apache则使用的是传统的select模型。目前Linux下能够承受高并发访问的 Squid、Memcached都采用的是epoll网络I/O模型。   处理大量的连接的读写，Apache所采用的select网络I/O模型非常低效。  

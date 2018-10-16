@@ -302,6 +302,20 @@ function rev_string($str)
 }
 $s = '1234567890';
 var_dump(rev_string($s));
+
+
+// 支持中文
+function getRev($str, $encoding='utf-8')
+{
+    $result = '';
+    $len = mb_strlen($str);
+    for($i=$len-1; $i>=0; $i--){
+        $result .= mb_substr($str, $i, 1, $encoding);
+    }
+    return $result;
+}
+$string = 'OK你是正确的Ole';
+echo getRev($string);
 ```
 
 

@@ -30,7 +30,14 @@ echo，print 只能打印出简单类型变量的值(如int,string)
 echo，print 因为不是函数，所以后面可以带括号，也可以不带括号。  
 print_r() 是函数，后面需带括号，可以打印出复杂类型变量的值(如数组,对象)，一次只能打印一个变量      
 print_r() 返回值是bool，一般是true  
+
+总结：  
+echo与print是PHP语句没有返回值，print_r是PHP函数有返回值  
+echo 可以打印1个或多个变量  
+print() 只能打印一个变量  
+print_r() 可以打印复合型 数组，对象等  
   
+
 
 isset()、empty()、is_null() 区别
 -----------
@@ -57,6 +64,26 @@ $var; (一个声明了，但是没有值的变量)
 尚未被赋值。  
 被unset()。  
   
+
+时间
+-----------
+1.获取当前时间   
+```
+date_default_timezone_set('PRC');  
+echo date('Y-m-d H:i:s');  
+```
+
+2.获取前一天此时时间  
+```
+date_default_timezone_set('PRC);
+echo date('Y-m-d H:i:s',strtotime('-1 day'));
+```
+3.计算两个日期的时间差
+```
+$a='2013-12-31';
+$b='2016-1-3';
+echo floor((strtotime($b)-strtotime($a))/(24*60*60));
+```
     
   
 require与include 区别  
@@ -73,18 +100,91 @@ include 引入的文件有错误时，会继续执行，并返回一个警告。
   
 
 
-cookie与session区别
+cookie与session区别与联系
 -----------
+区别：  
 1、cookie数据存放在客户的浏览器上，session数据放在服务器上。  
 2、cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗
 考虑到安全应当使用session。  
-3、session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能
-考虑到减轻服务器性能方面，应当使用COOKIE。  
+3、session会在一定时间内保存在服务器上。当服务器访问增多时，可能产生的SESSION 文件会比较多，这时可以设置分级目录进行SESSION文件的保存，效率会提高很多，设置方法为：session.save_path="N;/save_path"，N 为分级的级数，save_path 为开始目录。   
 4、单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。
-
-cookie 和session 的联系：  
-session一般是借助cookie来传递sessionid。
   
+联系：  
+session是通过cookie来工作的，Session数据保存在服务器端的文件（默认保存）或数据库中，客户端通过访问cookie ，而session和cookie之间是通过$_COOKIE['PHPSESSID']来联系的，通过$_COOKIE['PHPSESSID']可以知道session的id，之后通过它来获得服务端的数据。  
+如果cookie被禁用，可以通过URL来传递session_id。    
+
+
+
+post与get区别
+-----------
+GET(默认)  
+
+1、GET请求会直接将数据直接附加在URL之后，用?分割URL和传输数据，用&来分割多个参数  
+2、GET请求可以被缓存，可被保留至浏览器历史纪录中，可被设置被书签  
+3、GET请求有长度的限制，最多只能传递1024个字符  
+4、因为URL只支持ASCII编码格式，所以GET请求中的所有非ASCII数据都要被浏览器编码后再传输  
+5、一般被用来做查询数据的操作  
+
+POST  
+
+1、POST请求的数据会被放置在HTTP请求包的body中，所以安全性强于GET  
+2、POST请求的数据不会被浏览器缓存、记录，也无法设置为书签  
+3、POST请求没有长度的限制  
+4、一般被用来做敏感数据的传输以及数据的更新操作  
+  
+
+php文件上传的原理及如何限制文件大小、类型？
+-----------
+1）文件上传原理  
+```
+将客户端的文件上传到服务器，再将服务器的临时文件上传到指定目录
+客户端的文件，通过表单post到服务器，先存在临时目录中，然后通过代码把他移到指定的目录才能永久保存  
+```
+
+2）客户端配置
+```
+提交表单
+表单的发送方式为post
+添加enctype="multipart/form-data"
+```
+
+3）服务器端配置
+```
+file_uploads = On，支持HTTP上传
+uoload_tmp_dir = ，临时文件保存目录
+upload_max_filesize = 2M，允许上传文件的最大值
+max_file_uploads = 20 ，允许一次上传到的最大文件数
+post_max_size = 8M，post方式发送数据的最大值
+
+
+一般地，设置好上述四个参数后，在网络正常的情况下，上传<=8M的文件是不成问题
+但如果要上传>8M的大体积文件，只设置上述四项还一定能行的通。除非你的网络真有100M/S的上传高速，否则你还得继续设置下面的参数:
+
+max_execution_time = -1，设置了脚本被解析器终止之前允许的最大执行时间，单位为秒，防止程序写的不好而占尽服务器资源。-1代表无穷
+max_input_time = 60 ，脚本解析输入数据允许的最大时间，单位为秒
+max_input_nesting_level = 64 ，设置输入变量的嵌套深度
+max_input_vars_ = 1000，接受多少输入的变量（限制分别应用于$_GET、$_POST和$_COOKIE超全局变量，将会导致E_WARNING的产生，更多的输入变量将会从请求中截断。
+memory_limit = 128M，最大单线程的独立内存使用量。也就是一个web请求，给予线程最大的内存使用量的定义
+```
+
+4）错误信息说明
+```
+UPLOAD_ERR_OK：其值为0，没有错误发生，文件上传成功
+UPLOAD_ERR_INI_SIZE：其值为1，上传的文件超过了php.ini中upload_max_filesize选项限制的值
+UPLOAD_ERR_FORM_SIZE：其值为2，上传文件的大小超过了HTML表单中MAX_FILE_SIZE选项指定的值
+UPLOAD_ERR_PARTIAL：其值为3，文件只有部分被上传
+UPLOAD_ERR_NO_FILE：其值为4，没有文件被上传
+UPLOAD_ERR_NO_TMP_DIR：其值为6，找不到临时文件夹
+UPLOAD_ERR_CANT_WRITE：其值为7，文件写入失败
+UPLOAD_ERR_EXTENSION：其值为8，上传的文件被PHP扩展程序中断
+```
+
+限制上传文件类型
+```
+在前端可以<input type="file" accept="image/png,image/gif" /> 用accept属性限制，或者通过js监听file input的change事件来限制。
+  
+在后端不要简单的用文件后缀来判断，要通过$_FILES['xxx']['type']来判断。
+```
 
 
 接口与类有什么区别
@@ -147,12 +247,14 @@ SESSION 保存在服务器的哪里？
 -----------
 session保存位置通过php.ini指定，可存在指定目录的文件中或数据库中或内存中。  
 我们可以在php.ini文件查找session.save_handler
-与 session.save_path，如果session.save_handler=file，则session存储在session.save_path提定的文件中。
+与 session.save_path，如果session.save_handler=file，则session存储在session.save_path指定的文件中。
 如果session.save_handler=user，则存储在用户自定义位置，这时我们通过查看项目代码中的session_set_save_handler函数，来确定session存储在哪里。
   
   
 你所知道的缓存技术有哪些，分别做下简单介绍  
 ------------
+浏览缓存
+
 模板静态化：  
 借助ob缓存，成生静态模板；主要通过ob_start() ob_get_contents() ob_end_flush()等函数来实现    
   
@@ -185,6 +287,24 @@ http header大小，body大小
 比如nginx的：  
 large_client_header_buffers 这个属性，控制header大小，它默认是4k     
 client_max_body_size，这个参数可以限制body的大小，默认是1m    
+
+
+http缓存机制
+------------
+本地缓存（强制缓存）  
+	expires  
+	cache_control  
+
+协商缓存（对比缓存）304    
+	一种：    
+	Last-Modified：服务器通知浏览器资源的最后修改时间    
+	If-Modified-Since：浏览器会将得到资源的最后修改时间通过If-Modified-Since提交到服务器做检查，如果没有修改，返回304状态码    
+	   
+	另一种：  
+	ETag：http1.1推出，文件的指纹标识符，如果文件内容修改，指纹会改变  
+	If-None-Match：本地缓存失效，会携带此值去请求服务端，服务端判断该资源是否改变，如果没有改变，直接使用本地缓存，返回304 
+
+
 
 
 
@@ -244,14 +364,6 @@ set_time_limit() max_execution_time mail()
 
   
 
-
-扩展性的问题  
-
-如何设计一个框架
-------------
-参考：
-https://blog.csdn.net/yizhu2000/article/details/1915554  
-https://www.cnblogs.com/lovecindywang/p/4444915.html   
 
 
 
