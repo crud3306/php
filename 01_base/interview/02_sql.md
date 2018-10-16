@@ -10,7 +10,12 @@ PHP如何防止sql注入
 
 请说出mysql常用存储引擎？memory存储引擎的特点？  
 -----------
-Myisam、InnoDB、memory  
+Myisam、  
+InnoDB、  
+memory、  
+ARCHIVE、  
+...
+通过执行SHOW ENGINES;可以查看全部，其中support字段为yes的即为当前库支持的存储引擎，为default为默认引擎。  
 memory的特点是将表存到内存中，数度快，重启后数据丢失   
 
 
@@ -43,7 +48,7 @@ myisam:
 
 选择：  
 
-因为MyISAM相对简单所以在效率上要优于InnoDB.如果系统读多，写少。对原子性要求低。那么MyISAM最好的选择。且MyISAM恢复速度快。可直接用备份覆盖恢复。 
+因为MyISAM相对简单所以在效率上要优于InnoDB。如果系统读多，写少。对原子性要求低。那么MyISAM最好的选择。且MyISAM恢复速度快。可直接用备份覆盖恢复。 
 
 如果系统读少，写多的时候，尤其是并发写入高的时候。InnoDB就是首选了。 
 
@@ -58,15 +63,15 @@ myisam:
 
 索引算法Hash与BTree的区别
 -----------
+https://blog.csdn.net/kidoo1012/article/details/70207519  
 https://blog.csdn.net/u011305680/article/details/55520853  
+
 
 
 select * from table where (ID = 10) or (ID = 32) or (ID = 22) or (ID = 76) or (ID = 13) or (ID = 44) 让结果按10，32，22，76，13，44的顺序检索出来,请问如何书写?
 ------------
 ```sql
-select * from table
-where id in (10,32,22,76,13,44)
-order by charindex(id,'10,32,22,76,13,44') desc  
+SELECT * FROM `xxxx` WHERE id in (10，32，22，76，13，44) order by field(id, 10，32，22，76，13，44)
 ```
 
 mysql中删除重复记录，并保留重复数据中的一条数据

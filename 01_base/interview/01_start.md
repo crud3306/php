@@ -182,7 +182,7 @@ UPLOAD_ERR_EXTENSION：其值为8，上传的文件被PHP扩展程序中断
 限制上传文件类型
 ```
 在前端可以<input type="file" accept="image/png,image/gif" /> 用accept属性限制，或者通过js监听file input的change事件来限制。
-  
+
 在后端不要简单的用文件后缀来判断，要通过$_FILES['xxx']['type']来判断。
 ```
 
@@ -360,6 +360,69 @@ touch() symlink()
 link() parse_ini_file()
 set_time_limit() max_execution_time mail()
 ```
+
+
+一个有几千万粉丝的大v, 发一条消息, 如何让这么多的粉丝看到
+----------
+把消息优先推送给在线人, 其他人等上线之后再推. 如果一下子推给所有粉丝, 那是吃不消的, 而且有很多僵尸粉, 不合理。    
+
+
+
+同源策略、跨域解决方案
+-----------
+1、先来说说什么是源  
+源（origin）就是协议、域名和端口号。  
+比如一个url中的源就是：http://www.company.com:80  
+
+若地址里面的协议、域名和端口号均相同则属于同源。  
+以下是相对于 http://www.a.com/test/index.html 的同源检测
+```
+•	http://www.a.com/dir/page.html ----成功
+•	http://www.child.a.com/test/index.html ----失败，域名不同
+•	https://www.a.com/test/index.html ----失败，协议不同
+•	http://www.a.com:8080/test/index.html ----失败，端口号不同
+```
+  
+2.什么是同源策略？  
+同源策略是浏览器的一个安全功能，不同源的客户端脚本在没有明确授权的情况下，不能读写对方资源。所以a.com下的js脚本采用ajax读取b.com里面的文件数据是会报错的。  
+
+不受同源策略限制的：  
+1、页面中的链接，重定向以及表单提交是不会受到同源策略限制的。  
+2、跨域资源的引入是可以的。但是js不能读写加载的内容。如嵌入到页面中的<script src="..."></script>，<img>，<link>，<iframe>等。  
+  
+二、跨域  
+1、什么是跨域  
+受前面所讲的浏览器同源策略的影响，不是同源的脚本不能操作其他源下面的对象。想要操作另一个源下的对象是就需要跨域。    
+
+2、跨域的实现方式    
+  1) JSONP跨域  
+JSONP和JSON并没有什么关系！  
+JSONP的原理：  
+
+  2) CORS  
+CORS是一个W3C标准，全称是"跨域资源共享"（Cross-origin resource sharing）。  
+它允许浏览器向跨源服务器，发出XMLHttpRequest请求，从而克服了AJAX只能同源使用的限制。  
+在访问的服务器响应头中加上:  
+Access-Control-Allow-Origin: http://xxxxx.com   
+  
+  3) 降域 document.domain  
+同源策略认为域和子域属于不同的域，如：  
+child1.a.com 与 a.com，  
+child1.a.com 与 child2.a.com，  
+xxx.child1.a.com 与 child1.a.com  
+两两不同源，可以通过设置 document.damain='a.com'，浏览器就会认为它们都是同一个源。  
+降域的特点：
+1.	只能在父域名与子域名之间使用，且将 xxx.child1.a.com域名设置为a.com后，不能再设置成child1.a.com。
+2.	存在安全性问题，当一个站点被攻击后，另一个站点会引起安全漏洞。
+3.	这种方法只适用于 Cookie 和 iframe 窗口。
+
+
+
+
+
+
+
+
 
 
   
