@@ -3,6 +3,7 @@
 
 
 参考地址：
+https://blog.csdn.net/chen529834149/article/details/76574150 （需看）  
 https://www.cnblogs.com/isykw/p/6115461.html
 https://www.cnblogs.com/hellohell/p/5718175.html
 https://www.jb51.net/article/92609.htm (需看)
@@ -346,7 +347,8 @@ function seq_sch($array, $k)
 
 
 =====================
-二分查找，也叫做折半查找（数组里查找某个元素）
+二分查找，也叫做折半查找（仅适用于事先已经排好序的顺序表）  
+排好序的数组里查找某个元素
 =====================
 function bin_sch($array, $low, $high, $k){
    if ( $low <= $high){
