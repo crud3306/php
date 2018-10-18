@@ -114,6 +114,22 @@ $dir = '/data/my_web/test';
 var_dump(listDir($dir));
 ```
 
+线性表的删除（数组中实现）
+-----------  
+```
+function delete_array_element($array , $i)  
+{  
+    $len = count($array);   
+    for ($j= $i; $j<$len; $j ++){  
+        $array[$j] = $array [$j+1];  
+    }  
+    array_pop ($array);  
+    return $array ;  
+}  
+$arr = range(1, 10);
+var_dump(delete_array_element($arr, 3));
+```
+
 
 首先来画个菱形玩玩，思路：多少行for一次，然后每次循环在里面画空格和星号。
 -----------
@@ -812,13 +828,16 @@ for($i=1; $i<=$max; $i++) {
     for($j=1; $j<=$max; $j++) {
         for($k=1; $k<=$max; $k++) {
             if($i != $j && $j != $k && $i != $k) {
-                $num = $num + 1;
+                $num++;
             }
 
         }
     }
 }
 echo $num;
+
+输出:
+24
 ```
 
 有5个人偷了一堆苹果，准备在第二天分赃。晚上，有一人遛出来，把所有菜果分成5份，但是多了一个，顺手把这个扔给树上的猴了，自己先拿1/5藏了。
@@ -1001,6 +1020,25 @@ function getResult($month){
 var_dump(getResult($n));
 ```
 
+
+实现斐波那契数列,格式为:1,1,2,3,5,8…
+斐波那契数列：前两位均为1，从每三位起当前数字为前两个数字之和.
+-----------
+```
+function feibolaqi($num) {
+  $arr = array();
+  for($i=0; $i<=$num; $i++) {
+    if($i >= 2) {
+      $arr[$i] = $arr[$i-2] + $arr[$i-1];
+    } else {
+      $arr[$i] = 1;
+    }
+  }
+  return $arr;
+}
+var_dump(feibolaqi(6));
+```
+
   
 约瑟夫环:
 一群猴子排成一圈，按1,2,…,n依次编号。然后从第1只开始数，数到第m只,把它踢出圈，从它后面再开始数， 再数到第m只，在把它踢出去…，如此不停的进行下去， 直到最后只剩下一只猴子为止，那只猴子就叫做大王。要求编程模拟此过程，输入m、n, 输出最后那个大王的编号。
@@ -1022,17 +1060,38 @@ function yusehuan($n, $m)
 }
 echo yusehuan($n, $m).PHP_EOL;
 
-// 方法2
+// 方法2  (易理解)
+function king1($n,$m){
+    $mokey = range(1, $n);
+    $i = 0;
+
+    while (count($mokey) >1) {
+        $i++;
+
+        $head = array_shift($mokey);//一个个出列最前面的猴子
+        if ($i % $m !=0) {
+            #如果不是m的倍数，则把猴子返回尾部，否则就抛掉，也就是出列
+            array_push($mokey, $head);
+        }
+    }
+
+    // 剩下的最后一个就是大王了
+    return $mokey[0];
+}
+// 测试
+echo king1($n, $m).PHP_EOL;
+
+// 方法2-1 （相交方法2差一点）
 function monkey($n ,$m){
     $arr = range(1,$n);     //构造数组  array(1,2,3,4,5,6,7,8);
     $i = 0;                 //设置数组指针
-    while(count($arr)>1){
+    while (count($arr)>1) {
         //遍历数组，判断当前猴子是否为出局序号，如果是则出局，否则放到数组最后
         if(($i+1) % $m == 0) {
-            unset($arr[$i]);
+            unset($arr[$i]); // 注意unset掉的索引数组，剩下的元素键值不重新索引
             
         } else {
-            //array_push() 函数向第一个参数的数组尾部添加一个或多个元素（入栈），然后返回新数组的长度。
+            // array_push() 函数向第一个参数的数组尾部添加一个或多个元素（入栈），然后返回新数组的长度。
             array_push($arr ,$arr[$i]); //本轮非出局猴子放数组尾部
             unset($arr[$i]);   //删除
         }
@@ -1040,9 +1099,12 @@ function monkey($n ,$m){
 
         // var_dump($i, $arr);
     }
+
     return array_pop($arr);
+    // return current($monkeys);
 }
 print_r(monkey($n, $m));
+
 
 // 方法3
 function killMonkey($monkeys , $m , $current = 0){
@@ -1065,6 +1127,50 @@ function killMonkey($monkeys , $m , $current = 0){
 $monkeys = range(1, $n); //monkeys的编号
 var_dump(killMonkey($monkeys , $m));
 ```  
+
+
+汉诺塔游戏：
+1.有三根杆子A,B,C。A杆上有若干碟子
+2.每次移动一块碟子,小的只能叠在大的上面
+3.把所有碟子从A杆全部移到C杆上
+-----------
+汉诺塔（又称河内塔）问题是印度的一个古老的传说。开天辟地的神勃拉玛在一个庙里留下了三根金刚石的棒，第一根上面套着64个圆的金片，最大的一个在底下，其余一个比一个小，依次叠上去，庙里的众僧不倦地把它们一个个地从这根棒搬到另一根棒上，规定可利用中间的一根棒作为帮助，但每次只能搬一个，而且大的不能放在小的上面。解答结果请自己运行计算，程序见尾部。面对庞大的数字(移动圆片的次数)18446744073709551615，看来，众僧们耗尽毕生精力也不可能完成金片的移动。
+后来，这个传说就演变为汉诺塔游戏。
+```
+经过研究发现，汉诺塔的破解很简单，就是按照移动规则向一个方向移动金片：  
+汉诺塔的移动分析：  
+1阶：A->C
+2阶：A->B,A->C,B->C
+3阶：A→C,A→B,C→B,A→C,B→A,B→C,A→C
+此外，汉诺塔问题也是程序设计中的经典递归问题。
+
+/**
+$prama $n 环的个数
+$prama $x a柱(左)
+$prama $y b柱(中)
+$prama $z c柱(右)
+*/
+function hanoi($n,$x,$y,$z){
+    static $i = 0;
+
+    $i++;
+
+    if ($n==1) {
+        echo 'move disk 1 from '.$x.' to '.$z."\n";
+    } else {
+        // 先小的移到中间柱上
+        hanoi($n-1, $x, $z, $y);
+        // 大的移到右边柱
+        echo 'move disk '.$n.' from '.$x.' to '.$z."\n";
+        // 最后中间柱上的移到右柱
+        hanoi($n-1, $y, $x, $z);
+    } 
+
+    return $i; 
+}
+var_dump(hanoi(2,'A','B','C'));
+```
+
   
       
 常用正写一个email的正则表达式  
@@ -1203,6 +1309,198 @@ echo $_SESSION['username'];
 ```
   
 
-x
+自实现php的相关字符串函数  
 -----------
+```
+//------------------------  
+// PHP内置字符串函数实现  
+//------------------------  
+
+//字符串长度  
+function strlen ($str)  
+{  
+    if ($str == '' ) return 0;  
+    $count =  0;  
+    while (1){  
+        if ( $str[$count] != NULL){  
+            $count++;  
+            continue;  
+        }else{  
+            break;  
+        }  
+    }  
+    return $count;  
+}  
+
+//截取子串  
+function substr($str, $start,  $length=NULL)  
+{  
+    if ($str== '' || $start>strlen($str )) return;  
+    if (($length!=NULL) && ( $start>0) && ($length> strlen($str)-$start)) return;  
+    if (( $length!=NULL) && ($start< 0) && ($length>strlen($str )+$start)) return;  
+    if ($length ==  NULL) $length = (strlen($str ) - $start);  
+    
+    if ($start <  0){  
+        for ($i=(strlen( $str)+$start); $i<(strlen ($str)+$start+$length ); $i++) {  
+            $substr .=  $str[$i];  
+        }  
+    }  
+    if ($length  > 0){  
+        for ($i= $start; $i<($start+$length ); $i++) {  
+            $substr  .= $str[$i];  
+        }  
+    }  
+    if ( $length < 0){  
+        for ($i =$start; $i<(strlen( $str)+$length); $i++) {  
+            $substr .= $str[$i ];  
+        }  
+    }  
+    return $substr;  
+}  
+
+//字符串翻转  
+function strrev($str)  
+{  
+    if ($str == '') return 0 ;  
+    for ($i=(strlen($str)- 1); $i>=0; $i --){  
+        $rev_str .= $str[$i ];  
+    }  
+    return $rev_str;  
+}  
+
+//字符串比较  
+function strcmp($s1,  $s2)  
+{  
+    if (strlen($s1) <  strlen($s2)) return -1 ;  
+    if (strlen($s1) > strlen( $s2)) return 1;  
+    for ($i =0; $i<strlen($s1 ); $i++){  
+        if ($s1[ $i] == $s2[$i]){  
+            continue;  
+        }else{  
+            return false;  
+        }  
+    }  
+    return  0;  
+}  
+
+//查找字符串  
+function  strstr($str, $substr)  
+{  
+    $m = strlen($str);  
+    $n = strlen($substr );  
+    if ($m < $n) return false ;  
+    for ($i=0; $i <=($m-$n+1); $i ++){  
+        $sub = substr( $str, $i, $n);  
+        if ( strcmp($sub, $substr) ==  0)  return $i;  
+    }  
+    return false ;  
+}  
+
+//字符串替换  
+function str_replace($substr , $newsubstr, $str)  
+{  
+    $m = strlen($str);  
+    $n = strlen($substr );  
+    $x = strlen($newsubstr );  
+    if (strchr($str, $substr ) == false) return false;  
+    for ( $i=0; $i<=($m- $n+1); $i++){  
+        $i = strchr($str,  $substr);  
+        $str = str_delete ($str, $i, $n);  
+        $str = str_insert($str,  $i, $newstr);  
+    }  
+    return $str ;  
+}  
+
+//插入一段字符串  
+function str_insert($str, $i , $substr)  
+{  
+    for($j=0 ; $j<$i; $j ++){  
+        $startstr .= $str[$j ];  
+    }  
+    for ($j=$i; $j <strlen($str); $j ++){  
+        $laststr .= $str[$j ];  
+    }  
+    $str = ($startstr . $substr  . $laststr);  
+    return $str ;  
+}  
+
+//删除一段字符串  
+function str_delete($str , $i, $j)  
+{  
+    for ( $c=0; $c<$i;  $c++){  
+        $startstr .= $str [$c];  
+    }  
+    for ($c=( $i+$j); $c<strlen ($str); $c++){  
+        $laststr  .= $str[$c];  
+    }  
+    $str = ($startstr . $laststr );  
+    return $str;  
+}  
+
+//复制字符串  
+function strcpy($s1, $s2 )  
+{  
+    if (strlen($s1)==NULL || !isset( $s2)) return;  
+    for ($i=0 ; $i<strlen($s1);  $i++){  
+        $s2[] = $s1 [$i];  
+    }  
+    return $s2;  
+}  
+
+//连接字符串  
+function strcat($s1 , $s2)  
+{  
+    if (!isset($s1) || !isset( $s2)) return;  
+    $newstr = $s1 ;  
+    for($i=0; $i <count($s); $i ++){  
+        $newstr .= $st[$i ];  
+    }  
+    return $newsstr;  
+}  
+
+//简单编码函数（与php_decode函数对应）  
+function php_encode($str)  
+{  
+    if ( $str=='' && strlen( $str)>128) return false;  
+    for( $i=0; $i<strlen ($str); $i++){  
+        $c = ord($str[$i ]);  
+        if ($c>31 && $c <107) $c += 20 ;  
+        if ($c>106 && $c <127) $c -= 75 ;  
+        $word = chr($c );  
+        $s .= $word;  
+    }   
+    return $s;   
+}  
+
+//简单解码函数（与php_encode函数对应）  
+function php_decode($str)  
+{  
+    if ( $str=='' && strlen($str )>128) return false;  
+    for( $i=0; $i<strlen ($str); $i++){  
+        $c  = ord($word);  
+        if ( $c>106 && $c<127 ) $c = $c-20;  
+        if ($c>31 && $c< 107) $c = $c+75 ;  
+        $word = chr( $c);  
+        $s .= $word ;  
+    }   
+    return $s;   
+}  
+
+//简单加密函数（与php_decrypt函数对应）  
+function php_encrypt($str)  
+{  
+    $encrypt_key = 'abcdefghijklmnopqrstuvwxyz1234567890';  
+    $decrypt_key = 'ngzqtcobmuhelkpdawxfyivrsj2468021359';  
+    if ( strlen($str) == 0) return  false;  
+    for ($i=0;  $i<strlen($str); $i ++){  
+        for ($j=0; $j <strlen($encrypt_key); $j ++){  
+            if ($str[$i] == $encrypt_key [$j]){  
+                $enstr .=  $decrypt_key[$j];  
+                break;  
+            }  
+        }  
+    }  
+    return $enstr;  
+}  
+```
 

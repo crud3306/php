@@ -572,7 +572,9 @@ JSONP的原理：
 CORS是一个W3C标准，全称是"跨域资源共享"（Cross-origin resource sharing）。  
 它允许浏览器向跨源服务器，发出XMLHttpRequest请求，从而克服了AJAX只能同源使用的限制。  
 在访问的服务器响应头中加上:  
-Access-Control-Allow-Origin: http://xxxxx.com   
+Access-Control-Allow-Origin: http://xxxxx.com  
+如果是文件上传还需加上：
+ 
   
   3) 降域 document.domain  
 同源策略认为域和子域属于不同的域，如：  
