@@ -3,6 +3,19 @@ mysql方面的：
 ===========
 
 
+请简述数据库设计的范式及应用。
+------------
+一般第3范式就足以，用于表结构的优化，这样做既可以避免应用程序过于复杂同时也避免了SQL语句过于庞大所造成系统效率低下。
+
+回答：
+
+第一范式：若关系模式R的每一个属性是不可再分解的，再属于第一范式。  
+
+第二范式：若R属于第一范式，且所有的非码属性都完全函数依赖于码属性，则为第二范式。  
+
+第三范式：若R属于第二范式，且所有的非码属性没有一个是传递函数依赖于候选码，则属于第三范式。
+
+
 1. Mysql 中，int(1) 和 int(10) 的区别
 ------------
 ```
@@ -163,21 +176,23 @@ InnoDB:
 	支持行锁  
 	支持外键  
 	不支持FULLTEXT类型的索引  
+	InnoDB中不保存表的行数，如select count(*) from table时，InnoDB需要扫描一遍整个表来计算有多少行  
 	存储文件位置不同  
 		> .frm文件：存储数据表的框架结构  
 		> .ibd文件  
-	DELETE 表时，是一行一行的删除  
+	清空整个表时，是一行一行的删除，效率较慢  
 
 myisam:  
 	不支持事务  
 	表锁  
 	不支持外键  
-	支持FULLTEXT类型的索引  
+	支持FULLTEXT类型的索引
+	MyISAM保存表的行数，只要简单的读出保存好的行数即可。注意的是，当count(*)语句包含where条件时MyISAM也需要扫描整个表    
 	存储文件位置不同  
 		> .frm文件：存储数据表的框架结构  
 		> .MYD文件：即MY Data，表数据文件    
 		> .MYI文件：即MY Index，索引文件    
-	DELETE 表时，先drop表，然后重建表  
+	清空表时，先drop表，然后重建表  
 
 
 
@@ -317,6 +332,15 @@ mysql查看当前事务隔离级别：select @@tx_isolation
 　　乐观锁的工作原理：读取出数据时，将此版本号一同读出，之后更新时，对此版本号加一。此时，将提交数据的版本数据与数据库表对应记录的当前版本信息进行比对，如果提交的数据版本号大于数据库表当前版本号，则予以更新，否则认为是过期数据。
 
 
+什么是队列？排它锁，Myisam 死锁如何解决？
+-----------
+在默认情况下 MYisam 是表级锁，所以同时操作单张表的多个动作只能以队列的方式进行；
+
+排它锁又名写锁，在 SQL 执行过程中为排除其它请求而写锁，在执行完毕后会自动释放；
+
+死锁解决：先找到死锁的线程号，然后杀掉线程 ID
+
+
 复合索引
 ------------
 概念：用户可以在多个列上建立索引,这种索引叫做复合索引(组合索引); 
@@ -354,6 +378,20 @@ sql 语句优化
 磁盘 I/O 优化  
 负载均衡  
 主从复制  
+
+1）尽量选择较小的列；
+
+2）将where中用的比较频繁的字段建立索引；
+
+3）select中避免使用*；
+
+4）避免在索引列上使用计算、not in和<>等操作；
+
+5）当只需要一行数据时候使用limit1；
+
+6）保证单表数据不超过200w，实时分割表；
+
+针对查询较慢的语句，可以使用explain来分析该语句具体的执行情况。 
 
 
 索引算法Hash与BTree的区别
@@ -399,6 +437,34 @@ DELETE FROM `admin` WHERE id NOT IN(SELECT * FROM(SELECT max(id) FROM `admin` GR
 3、结合上面的分析来看一下整个的SQL语句理解，先将分组的ID查出来，然后删除USER表中ID 不在分组ID中的数据，那么就实现效果了。
 ```
 delete from 表名 where  ID not in (select * from (select  id from 表名 group by 分组的列名) 别名)  
+```
+
+表中有A、B、C三列,用SQL语句实现：当A列大于B列时选择A列否则选择B列，当B列大于C列时选择B列否则选择C列。
+---------------
+```
+select
+case
+when first_name>middle_name then
+case when first_name>last_name then first_name
+else last_name end
+else
+case when middle_name>last_name then middle_name else last_name
+end
+end as name
+from member;
+
+1.用一条sql语句
+select (case when a>b then a else b end ),(case when b>c then b esle c end)  from 表名
+
+或者使用
+
+select if(a>b,a,b),if(b>c,b,c) from 表名
+
+select (case when a>b then a
+			 when a>c then a
+			 when b>c then b else c
+			 end) 
+from table1
 ```
 
 
