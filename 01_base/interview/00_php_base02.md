@@ -1,5 +1,10 @@
 
 
+简述POST 和GET传输的最大容量分别是多少?
+------------
+2MB(可在php.ini中更改),1024B
+
+
 PHP获取http请求的头信息实现步骤
 ------------
 方法1：
@@ -104,14 +109,98 @@ http://www.manongjc.com/article/1463.html
 ```
 
 
-你觉得在PV10W的时候, 同等配置下,LUNIX 比WIN快多少?
+关于PHP重定向 
 ------------
-不做优化的情况下一样
+```
+方法一：
+Header("HTTP/1.1 303 See Other");
+// Header("Location: $url");
+header("Location: index.php"); 
 
+方法二：echo "<script>window.location ='".$url."';</script>"; 
 
-简述POST 和GET传输的最大容量分别是多少?
-------------
-2MB(可在php.ini中更改),1024B
+方法三：echo '<meta http-equiv="refresh" content="0; url='.$url.'">'; 
+```
+
+header()函数主要的功能有哪些？使用过程中注意什么？
+------------------
+1、重定向   
+Header("Location: $url");  
+
+2、指定内容：  
+header('Content-type: application/pdf');
+
+3、附件：
+	header('Content-type: application/pdf');  
+
+	//指定内容为附件，指定下载显示的名字  
+	header('Content-Disposition: attachment; filename="downloaded.pdf"');  
+
+	//打开文件，并输出  
+	readfile('original.pdf');  
+	以上代码可以在浏览器产生文件对话框的效果  
+
+4、让用户获取最新的资料和数据而不是缓存  
+	header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1  
+	header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");   // 设置临界时间  
+
+```
+<?php
+header('HTTP/1.1 200 OK'); // ok 正常访问
+header('HTTP/1.1 404 Not Found'); //通知浏览器 页面不存在
+header('HTTP/1.1 301 Moved Permanently'); //设置地址被永久的重定向 301
+header('Location: http://www.ithhc.cn/'); //跳转到一个新的地址
+header('Refresh: 10; url=http://www.ithhc.cn/'); //延迟转向 也就是隔几秒跳转
+header('X-Powered-By: PHP/6.0.0'); //修改 X-Powered-By信息
+header('Content-language: en'); //文档语言
+header('Content-Length: 1234'); //设置内容长度
+header('Last-Modified: '.gmdate('D, d M Y H:i:s', $time).' GMT'); //告诉浏览器最后一次修改时间
+header('HTTP/1.1 304 Not Modified'); //告诉浏览器文档内容没有发生改变
+ 
+###内容类型###
+header('Content-Type: text/html; charset=utf-8'); //网页编码
+header('Content-Type: text/plain'); //纯文本格式
+header('Content-Type: image/jpeg'); //JPG、JPEG 
+header('Content-Type: application/zip'); // ZIP文件
+header('Content-Type: application/pdf'); // PDF文件
+header('Content-Type: audio/mpeg'); // 音频文件 
+header('Content-type: text/css'); //css文件
+header('Content-type: text/javascript'); //js文件
+header('Content-type: application/json'); //json
+header('Content-type: application/pdf'); //pdf
+header('Content-type: text/xml'); //xml
+header('Content-Type: application/x-shockw**e-flash'); //Flash动画
+ 
+######
+ 
+###声明一个下载的文件###
+header('Content-Type: application/octet-stream');
+header('Content-Disposition: attachment; filename="ITblog.zip"');
+header('Content-Transfer-Encoding: binary');
+readfile('test.zip');
+######
+ 
+###对当前文档禁用缓存###
+header('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+######
+ 
+###显示一个需要验证的登陆对话框### 
+header('HTTP/1.1 401 Unauthorized'); 
+header('WWW-Authenticate: Basic realm="Top Secret"'); 
+######
+ 
+ 
+###声明一个需要下载的xls文件###
+header('Content-Disposition: attachment; filename=ithhc.xlsx');
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header('Content-Length: '.filesize('./test.xls')); 
+header('Content-Transfer-Encoding: binary'); 
+header('Cache-Control: must-revalidate'); 
+header('Pragma: public'); 
+readfile('./test.xls'); 
+######
+```
 
 
 
