@@ -108,13 +108,46 @@ $_SERVER['SERVER_PORT'] #服务器所使用的端口
 
 $_SERVER['HTTP_REFERER']; 提供来路url
 
-$_SERVER['REMOTE_HOST'] //当前用户主机名;
-
-$_SERVER['PHP_SELF']//正在执行脚本的文件名
+$_SERVER['REMOTE_HOST'] //当前用户主机名; 
 
 $_SERVER['REQUEST_METHOD']//访问页面时的请求方法
 
 $_SERVER['SCRIPT_FILENAME'] #当前执行脚本的绝对路径名。
+
+$_SERVER['PHP_SELF']//正在执行脚本的文件名，带路径从web根目录起 
+
+$_SERVER['QUERY_STRING'] //查询(query)的字符串。 
+
+
+# 例子
+#===============
+#测试网址:     http://localhost/blog/testurl.php?id=5
+
+//获取域名或主机地址 
+echo $_SERVER['HTTP_HOST']."<br>"; #localhost
+
+//获取网页地址 
+echo $_SERVER['PHP_SELF']."<br>"; #/blog/testurl.php
+
+//获取网址参数 
+echo $_SERVER["QUERY_STRING"]."<br>"; #id=5
+
+//获取用户代理 
+echo $_SERVER['HTTP_REFERER']."<br>"; 
+
+//获取完整的url
+echo 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+echo 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'];
+#http://localhost/blog/testurl.php?id=5
+
+//包含端口号的完整url
+echo 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"]; 
+#http://localhost:80/blog/testurl.php?id=5
+
+//只取路径
+$url='http://'.$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"]; 
+echo dirname($url);
+#http://localhost/blog
 ```
 
 php把utf-8转换成gbk的函数是
@@ -122,7 +155,7 @@ php把utf-8转换成gbk的函数是
 iconv(‘UTF-8′,’GBK’,$str)  
 
 
-$a = 1; $b = & $a;  
+$a = 1; $b = &$a;  
 unset($a),$b是否还是1，为什么？  
 unset($b),$a是否还是1，为什么？  
 -----------
