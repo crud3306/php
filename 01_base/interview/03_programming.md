@@ -8,7 +8,7 @@
 function getHeader()
 {
     $headers = [];
-    foreach ($SERVER as $key => $value) {
+    foreach ($_SERVER as $key => $value) {
         if (strstr($key, 'HTTP')) {
             $newk = ucwords(strtolower(str_replace('_', '-', substr($key, 5))));
             $headers[$newk] = $value;
@@ -45,25 +45,29 @@ function daxie($num)
 // PHP数字金额转大写格式
 function floatohz($value){
     $result = '';
-    $v_a = array('分','角','零','块','十',',百','千','万','十','百','千','亿');
+    //$v_a = array('分','角','零','块','十',',百','千','万','十','百','千','亿');
+    $v_a = array_reverse(['分','角','零','块','十',',百','千','万','十','百','千','亿']);
     $v_b = array('零','一','二','三','四','五','六','七','八','九','十');
     $v_c = array();
     $value = (string)$value;
-    $value = sprintf("%0.2f",$value);
+    $value = sprintf("%0.2f", $value);
     $len = strlen($value);
 
-    for($i=$len;$i>=0;$i--){
-       $val=$value[$i];//$VALUE 不是数组
-       if($val!='.'){
-           if($val!='0')
+    for ($i=$len-1; $i>=0; $i--){
+       $val = $value[$i];//$VALUE 不是数组
+       if ($val != '.') {
+           if($val!='0') {
               $v_c[]=$v_b[$val].$v_a[$len-$i-1];
+           }
        }
     }
 
-    $v_c=array_reverse($v_c);
+    /*
+    $v_c = array_reverse($v_c);
     foreach($v_c as $val){
        $result.=$val;
     }
+    */
     unset($v_a);unset($v_b);unset($v_c);
 
     return $result;
@@ -123,7 +127,7 @@ function delete_array_element($array , $i)
     for ($j= $i; $j<$len; $j ++){  
         $array[$j] = $array [$j+1];  
     }  
-    array_pop ($array);  
+    array_pop($array);  
     return $array ;  
 }  
 $arr = range(1, 10);
@@ -234,7 +238,7 @@ function bubbleSort($arr)
 
           //该层循环用来控制每轮 冒出一个数 需要比较的次数
           for ($k=0; $k<$len-$i; $k++) {
-               if($arr[$k] > $arr[$k+1]) {
+               if ($arr[$k] > $arr[$k+1]) {
                     $tmp = $arr[$k+1]; // 声明一个临时变量
                     $arr[$k+1] = $arr[$k];
                     $arr[$k] = $tmp;
@@ -336,8 +340,8 @@ $a = str_replace($b, "", $a);
 
 // 使用异或交换2个值，原理：一个值经过同一个值的2次异或后，原值不变
 $a = $a^$b;
-$b = $a^$b;
-$a = $a^$b;
+$b = $a^$b;  //  相当于$a ^ $b ^ $b
+$a = $a^$b;  //  相当于$a ^ $b ^ $a
 ```
   
 写一个方法获取文件的扩展名

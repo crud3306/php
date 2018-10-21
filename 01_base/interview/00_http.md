@@ -185,7 +185,10 @@ URL是Internet上用来描述信息资源的字符串，主要用在各种WWW客
 2、跨域的实现方式    
   1) JSONP跨域  
 JSONP和JSON并没有什么关系！  
-JSONP的原理：  
+JSONP由来：  
+ajax请求受同源策略影响，不允许进行跨域请求，而script标签src属性中的链接却可以访问跨域的js脚本，利用这个特性，服务端不再返回JSON格式的数据，而是返回一段调用某个函数的js代码，在src中进行了调用，这样实现了跨域。 
+JSONP原理：
+首先在客户端注册一个callback，然后把callback的名字传给服务器。此时，服务器先生成json数据，然后以javascript语法的方式，生成function，function名字就是传递上来I带参数jsonp。最后将json数据直接以入参的方式，放置function中，这样就生成js语法的文档，返回给客户端。客户端浏览器，解析script变迁，并执行返回javascript文档，此时数据作为参数，传入了客户端预先定义好的callback函数里。简单的说，就是利用script标签没有跨域限制的“漏洞”来达到与第三方通讯的目的。  
 
   2) CORS  
 CORS是一个W3C标准，全称是"跨域资源共享"（Cross-origin resource sharing）。  
@@ -265,3 +268,71 @@ udp 报头有哪些选项及其作用
 -------------
 源端口、目的端口  
 数据包长度、校验值  
+
+
+
+WebSocket 是什么？ 
+--------------
+WebSocket是HTML5规范提出的一种协议；目前除了完犊子的IE浏览器，其他浏览器都基本支持。他是一种协议，万变不离其宗，也是基于TCP协议的
+
+
+WebSocket与Socket的关系
+--------------
+Socket其实并不是一个协议，而是为了方便使用TCP或UDP而抽象出来的一层，是位于应用层和传输控制层之间的一组接口。
+
+“Socket是应用层与TCP/IP协议族通信的中间软件抽象层，它是一组接口，提供一套调用TCP/IP协议的API。在设计模式中，Socket其实就是一个门面模式，它把复杂的TCP/IP协议族隐藏在Socket接口后面，对用户来说，一组简单的接口就是全部，让Socket去组织数据，以符合指定的协议。”
+
+当两台主机通信时，必须通过Socket连接，Socket则利用TCP/IP协议建立TCP连接。TCP连接则更依靠于底层的IP协议，IP协议的连接则依赖于链路层等更低层次。
+
+WebSocket就像HTTP一样，则是一个典型的应用层协议。
+
+
+WebSocket与HTTP的关系 
+--------------
+相同点：  
+1. 都是一样基于TCP的，都是可靠性传输协议。  
+2. 都是应用层协议。   
+
+不同点：  
+1. WebSocket是双向通信协议，模拟Socket协议，可以双向发送或接受信息。HTTP是单向的。  
+2. WebSocket是需要浏览器和服务器握手进行建立连接的。而http是浏览器发起向服务器的连接，服务器预先并不知道这个连接。  
+
+联系：  
+WebSocket在建立握手时，数据是通过HTTP传输的。但是建立之后，在真正传输时候是不需要HTTP协议的。  
+
+总结：
+在WebSocket中，只需要服务器和浏览器通过HTTP协议进行一个握手的动作，然后单独建立一条TCP的通信通道进行数据的传送。 
+
+WebSocket连接的过程是：  
+首先，客户端发起http请求，经过3次握手后，建立起TCP连接；http请求里存放WebSocket支持的版本号等信息，如：Upgrade、Connection、WebSocket-Version等；  
+然后，服务器收到客户端的握手请求后，同样采用HTTP协议回馈数据；  
+最后，客户端收到连接成功的消息后，开始借助于TCP传输信道进行全双工通信。  
+
+```
+$server = new swoole_websocket_server("127.0.0.1", 9502);
+
+$server->on('open', function($server, $req) {
+    echo "connection open: {$req->fd}\n";
+});
+
+$server->on('message', function($server, $frame) {
+    echo "received message: {$frame->data}\n";
+    $server->push($frame->fd, json_encode(["hello", "world"]));
+});
+
+$server->on('close', function($server, $fd) {
+    echo "connection close: {$fd}\n";
+});
+
+$server->start();
+```
+
+
+swoole
+-----------
+Swoole是一个PHP扩展，扩展不是为了提升网站的性能，是为了提升网站的开发效率。最少的性能损耗，换取最大的开发效率。利用Swoole扩展，开发一个复杂的Web功能，可以在很短的时间内完成了。
+
+Swoole 使用纯 C 语言编写，提供了 PHP 语言的异步多线程服务器。
+
+
+
