@@ -50,6 +50,23 @@ HTTP协议中几个状态码的含义:503 500 401 403 404 200 301 302。。。
 ```
 
 
+什么是restful api
+---------------
+REST是所有Web应用都应该遵守的架构设计指导原则。 
+Representational State Transfer，翻译是”表现层状态转化”。 
+面向资源是REST最明显的特征，对于同一个资源的一组不同的操作。资源是服务器上一个可命名的抽象概念，资源是以名词为核心来组织的，首先关注的是名词。REST要求，必须通过统一的接口来对资源执行各种操作。对于每个资源只能执行一组有限的操作。（7个HTTP方法：GET/POST/PUT/DELETE/PATCH/HEAD/OPTIONS）
+
+符合REST设计标准的API，即RESTful API。  
+
+POST   /uri     创建  
+DELETE /uri/xxx 删除   
+PUT    /uri/xxx 更新或创建  
+GET    /uri/xxx 查看  
+
+注：PUT，DELETE操作是幂等的
+
+
+
 长连接和短连接的使用
 ---------------
 参考：https://www.sohu.com/a/165361260_505885  
