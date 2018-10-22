@@ -5,6 +5,19 @@
 2MB(可在php.ini中更改),1024B
 
 
+PHP输入流php://input 与 $HTTP_RAW_POST_DATA
+-------------
+```
+Coentent-Type仅在取值为application/x-www-data-urlencoded和multipart/form-data两种情况下，PHP才会将http请求数据包中相应的数据填入全局变量$_POST
+PHP不能识别的Content-Type类型的时候，会将http请求包中相应的数据填入变量$HTTP_RAW_POST_DATA
+只有Coentent-Type不为multipart/form-data的时候，PHP不会将http请求数据包中的相应数据填入php://input，否则其它情况都会。填入的长度，由Coentent-Length指定。
+只有Content-Type为application/x-www-data-urlencoded时，php://input数据才跟$_POST数据相一致。
+php://input数据总是跟$HTTP_RAW_POST_DATA相同，但是php://input比$HTTP_RAW_POST_DATA更凑效，且不需要特殊设置php.ini
+PHP会将PATH字段的query_path部分，填入全局变量$_GET。通常情况下，GET方法提交的http请求，body为空。
+```
+
+
+
 PHP获取http请求的头信息实现步骤
 ------------
 方法1：
