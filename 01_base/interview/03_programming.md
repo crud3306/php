@@ -1004,6 +1004,20 @@ function fun($n){
 
 var_dump(fun($n));
 
+// 方式二：空间换时间，速度快 
+function feibolaqi($num) {
+  $arr = array();
+  for ($i=0; $i<$num; $i++) {
+    if($i >= 2) {
+      $arr[$i] = $arr[$i-2] + $arr[$i-1];
+    } else {
+      $arr[$i] = 1;
+    }
+  }
+  return $arr[count($arr)-1];
+}
+var_dump(feibolaqi($n));
+
 // 方式二
 function getResult($month){
   $one = 1; //第一个月兔子的对数
@@ -1031,7 +1045,7 @@ var_dump(getResult($n));
 ```
 function feibolaqi($num) {
   $arr = array();
-  for($i=0; $i<=$num; $i++) {
+  for ($i=0; $i<$num; $i++) {
     if($i >= 2) {
       $arr[$i] = $arr[$i-2] + $arr[$i-1];
     } else {
@@ -1041,6 +1055,8 @@ function feibolaqi($num) {
   return $arr;
 }
 var_dump(feibolaqi(6));
+
+注：也可用这种方式求最后一个数值：即$arr[count($arr)-1];
 ```
 
   
