@@ -72,3 +72,79 @@ location / {
   
 
 
+laravel目录结构
+==========
+```
+app
+bootsrap
+config
+database
+public
+Resources
+Routes
+Storage
+tests
+vender
+```
+
+App目录
+----------
+app 目录包含了应用的核心代码，注意不是框架的核心代码，框架的核心代码在 /vendor/laravel/framework 里面，此外你为应用编写的代码绝大多数也会放到这里，当然，如果你基于 Composer 做了 PHP 组件化开发的话，这里面存放的恐怕也只有一些入口性的代码了；
+
+
+Bootstrap目录
+----------
+bootstrap 目录包含了少许文件，用于框架的启动和自动载入配置，还有一个 cache 文件夹，里面包含了框架为提升性能所生成的文件，如路由和服务缓存文件；
+
+
+Config目录
+----------
+config 目录包含了应用所有的配置文件，建议通读一遍这些配置文件以便熟悉 Laravel 所有默认配置项；
+
+
+Database目录
+----------
+database 目录包含了数据库迁移文件及填充文件，如果有使用 SQLite 的话，你还可以将其作为 SQLite 数据库存放目录；
+
+
+Public目录
+----------
+public 目录包含了应用入口文件 index.php 和前端资源文件（图片、JavaScript、CSS等），该目录也是 Apache 或 Nginx 等 Web 服务器所指向的应用根目录，这样做的好处是隔离了应用核心文件直接暴露于 Web 根目录之下，如果权限系统没做好或服务器配置有漏洞的话，很可能导致应用敏感文件被黑客窃取，进而对网站安全造成威胁；
+
+
+Resources目录
+----------
+resources 目录包含了应用视图文件和未编译的原生前端资源文件（LESS、SASS、JavaScript），以及本地化语言文件；
+
+
+Routes目录
+----------
+routes 目录包含了应用定义的所有路由。Laravel 默认提供了四个路由文件用于给不同的入口使用：web.php、api.php、 console.php 和 channels.php。
+
+web.php 文件包含的路由都位于 RouteServiceProvider 所定义的 web 中间件组约束之内，因而支持 Session、CSRF 保护以及 Cookie 加密功能，如果应用无需提供无状态的、RESTful 风格的 API，那么路由基本上都要定义在 web.php 文件中。
+
+api.php 文件包含的路由位于 api 中间件组约束之内，支持频率限制功能，这些路由是无状态的，所以请求通过这些路由进入应用需要通过 token 进行认证并且不能访问 Session 状态。
+
+console.php 文件用于定义所有基于闭包的控制台命令，每个闭包都被绑定到一个控制台命令并且允许与命令行 IO 方法进行交互，尽管这个文件并不定义 HTTP 路由，但是它定义了基于控制台的应用入口（路由）。
+
+channels 文件用于注册应用支持的所有事件广播频道。
+
+
+Storage目录
+----------
+storage 目录包含了编译后的 Blade 模板、基于文件的 Session、文件缓存，以及其它由框架生成的文件，该目录被细分为成 app、framework 和 logs 子目录，app 目录用于存放应用生成的文件，framework 目录用于存放框架生成的文件和缓存，最后，logs 目录存放的是应用的日志文件。
+
+storage/app/public 目录用于存储用户生成的文件，比如可以被公开访问的用户头像，要达到被 Web 用户访问的目的，你还需要在 public （应用根目录下的 public 目录）目录下生成一个软连接 storage 指向这个目录。你可以通过 php artisan storage:link 命令生成这个软链接。
+
+
+Tests目录
+----------
+tests 目录包含自动化测试文件，其中默认已经提供了一个开箱即用的PHPUnit 示例；每一个测试类都要以 Test 开头，你可以通过 phpunit 或 php vendor/bin/phpunit 命令来运行测试。
+
+
+Vendor目录
+----------
+vendor 目录包含了应用所有通过 Composer 加载的依赖。
+
+
+
