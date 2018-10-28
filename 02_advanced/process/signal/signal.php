@@ -8,6 +8,13 @@ function sighandler($signal) {
   if ($signal == SIGINT) {
     $pid = getmypid();
     exit("{$pid} process, Killed!".PHP_EOL);
+
+  } elseif ($signal == SIGCHLD) {  
+    $pid = getmypid();
+    echo "{$pid} process, SIGCHLD!".PHP_EOL;
+
+    pcntl_wait($status);
+
   } else {
   	echo $signal.PHP_EOL;
   }
@@ -19,8 +26,10 @@ function sighandler($signal) {
 $child_list = [];
 // 注册一个信号处理器。当发出该信号的时候对调用已定义的函数
 pcntl_signal(SIGINT, 'sighandler');
-// 子进程结束时（自已exit，或者通过信息被exit时）会给父进程
-pcntl_signal(SIGCHLD, SIG_IGN); 
+
+// 子进程结束时（自已exit，或者通过信息被exit时）会给父进程发送SIGCHLD信号，防止子进程僵尸 
+// pcntl_signal(SIGCHLD, SIG_IGN); 
+// pcntl_signal(SIGCHLD, 'sighandler'); 
  
 for ($i = 0; $i < 3; $i++) {
   $pid = pcntl_fork();
@@ -32,7 +41,7 @@ for ($i = 0; $i < 3; $i++) {
       // 子进程接收到信号时，调用注册的signalHandler()
       pcntl_signal_dispatch();
       echo "I am child: ".getmypid(). " and i am running !".PHP_EOL;
-      sleep(rand(1,3));
+      sleep(rand(1,2));
     }
     
   } elseif($pid > 0) {
@@ -46,12 +55,23 @@ for ($i = 0; $i < 3; $i++) {
 
 var_dump($child_list);
  
-sleep(5);
+sleep(6);
 foreach ($child_list as $key => $pid) {
   // 发送信息
   posix_kill($pid, SIGINT);
 }
- 
-sleep(50);
+
+// 防止子进程僵尸
+while (count($child_list) > 0) {
+  $tmp_id = pcntl_wait($status);
+  if ($tmp_id) {
+    var_dump($tmp_id);
+    array_pop($child_list);
+  }
+}
+
+var_dump($child_list);
+
+sleep(5);
 echo "{$parentpid} parent is end".PHP_EOL;
 
