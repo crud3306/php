@@ -42,6 +42,12 @@ PhpStorm换行符的设置方法
 
 
 
+phpstorm 或 webstorm 设置多个项目可以并存：
+----------
+首选项 -> Directories -> Add Content Root 中添加你当前的工程目录。
+
+
+
 
 
 
