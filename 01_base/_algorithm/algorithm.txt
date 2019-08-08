@@ -553,3 +553,48 @@ function sort()
     var_dump($b);exit;
 }
 
+求交集
+--------
+<?php
+public function sort($a = array())
+{
+    // var_dump(PHP_INT_MAX, PHP_INT_SIZE);
+    // int 9223372036854775807
+    // int 8
+    $bitmap = array_fill(0, 50, 0); //申请一个整形数组, 50个元素, 初始化为整数0
+    $int_bit_size = PHP_INT_SIZE * 8; //$bitmap中每个整形的二进制位数 (本例中int = 8*8 = 64bit; $bitmap数组一共50*64 = 3200个bit位)
+    // $a = array(1,4,3,50,34,60,100,88,200,150,300); //定一个乱序的数组
+    //扫描$a中的每一个数, 将其转换为 x*64 + y
+    foreach ($a as $k => $v) {
+      $shang = $v / $int_bit_size;
+      $yushu = $v % $int_bit_size;
+      $offset = 1 << $yushu;
+      $bitmap[$shang] = $bitmap[$shang] | $offset;//将bit位置为1
+    }
+    return $bitmap;
+  }
+  
+  public function intersect()
+  {
+    $int_bit_size = PHP_INT_SIZE * 8;
+    $a = array(1,4,3,50,34,60,100,88,200,150,300);
+    $b = array(1,5,3,50,34,55,100,87,222,150,300);
+    $bit_a = $this->sort($a);
+    $bit_b = $this->sort($b);
+    $c = array();
+    foreach ($bit_a as $k => $v) {
+      $c[$k] = $bit_a[$k] & $bit_b[$k]; //二进制 & 计算求交集
+    }
+    $d = array();
+    foreach ($c as $k => $v) {
+      for ($i = 0; $i < $int_bit_size; $i++) {
+        $tmp = 1 << $i;
+        $flag = $tmp & $c[$k];
+        // $b[] = $flag ? $k * $int_bit_size + $i : false;
+        if ($flag) {
+          $d[] = $k * $int_bit_size + $i;
+        }
+      }
+    }
+    var_dump($d);exit;
+}
