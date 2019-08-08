@@ -510,7 +510,46 @@ foreach($t as $k=>$v){
 
 
 
+bitmap排序
+==========
+本文实例讲述了PHP实现bitmap位图排序求交集的方法。分享给大家供大家参考，具体如下：
 
+初始化一串全为0的二进制;
+现有一串无序的整数数组;
+如果整数x在这个整数数组当中，就将二进制串的第x位置为1;
+然后顺序读取这个二进制串,并将为1的位转换成整数,顺序存放到新的集合中,就是排好序的了
 
-
+<?php
+function sort()
+{
+    // var_dump(PHP_INT_MAX, PHP_INT_SIZE);
+    // int 9223372036854775807
+    // int 8
+    $bitmap = array_fill(0, 50, 0); //申请一个整形数组, 50个元素, 初始化为整数0
+    $int_bit_size = PHP_INT_SIZE * 8; //$bitmap中每个整形的二进制位数 (本例中int = 8*8 = 64bit; $bitmap数组一共50*64 = 3200个bit位),也就是说能为最大值小于等于3200的整数集合排序
+    
+    $a = array(1,4,3,50,34,60,100,88,200,150,300); //定义一个乱序的数组
+    
+    //扫描$a中的每一个数, 将其转换为 x*64 + y
+    foreach ($a as $k => $v) {
+      $shang = $v / $int_bit_size;
+      $yushu = $v % $int_bit_size;
+      $offset = 1 << $yushu;
+      $bitmap[$shang] = $bitmap[$shang] | $offset;//将bit位置为1
+    }
+    
+    //将$bitmap中的bit位依次还原为整数输出,即可得到排序后的数组
+    $b = array();
+    foreach ($bitmap as $k => $v) {
+      for ($i = 0; $i < $int_bit_size; $i++) {
+        $tmp = 1 << $i;
+        $flag = $tmp & $bitmap[$k];
+        // $b[] = $flag ? $k * $int_bit_size + $i : false;
+        if ($flag) {
+          $b[] = $k * $int_bit_size + $i;
+        }
+      }
+    }
+    var_dump($b);exit;
+}
 
