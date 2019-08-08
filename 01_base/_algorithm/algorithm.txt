@@ -552,6 +552,20 @@ function sort()
     }
     var_dump($b);exit;
 }
+输出：
+array
+  0 => int 1
+  1 => int 3
+  2 => int 4
+  3 => int 34
+  4 => int 50
+  5 => int 60
+  6 => int 88
+  7 => int 100
+  8 => int 150
+  9 => int 200
+  10 => int 300
+
 
 求交集
 --------
@@ -598,3 +612,13 @@ public function sort($a = array())
     }
     var_dump($d);exit;
 }
+输出：
+array
+  0 => int 1
+  1 => int 3
+  2 => int 34
+  3 => int 50
+  4 => int 100
+  5 => int 150
+  6 => int 300
+  
