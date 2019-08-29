@@ -229,3 +229,88 @@ $q->show();
 
 
 
+求先递增在递减数组中的最大值
+================
+法1：做一次遍历，可以依次遍历整个数组如果array[i]满足array[i] > array[i-1] && array[i] > array[i+1],那么i就是最大元素的下标，但是这样做的时间复杂度为O(n)。
+
+法2：因先递增后递减，借助二分查找的思想来做，时间复杂度O(lgn)。
+
+注意：最小堆在这里并不适合，最小堆适合找topK。而top1其实同方法1一样，就是一次遍历。
+```php
+$arr = [1, 2, 3, 4, 5, 7, 6, 3, 2, 1];
+
+function findMiddle($arr) {
+	$length = count($arr);
+
+	$left = 0;
+	$right = $length - 1;
+	$mid = intval(($left+$right)/2);
+
+	while ($mid > 0 && $mid < $length - 1) {
+
+		var_dump($left.' '.$right.' '.$mid);
+
+		if ($arr[$mid] > $arr[$mid - 1] && $arr[$mid] > $arr[$mid+1]) {
+			return $arr[$mid];
+
+		} elseif ($arr[$mid] > $arr[$mid-1]) {
+			$left = $mid+1; //也可不加1，该例中因最终结果始终会判断mid与mid+1及mid-1，所以left与right的变化可+1或-1
+			$mid = intval(($left+$right)/2);
+
+		} else {
+			$right = $mid-1; //也可不减1
+			$mid = intval(($left+$right)/2);
+		}
+	}
+
+	return -1;
+}
+
+var_dump(findMiddle($arr));
+```
+
+
+输出一个数组的所有排列组合
+=============
+输出一个字符串的全部排列情况
+```
+$str = 'abc';
+$a =str_split($str);
+perm($a, 0, count($a)-1);
+
+function perm(&$ar, $k, $m) {
+    if($k == $m){ 
+        echo join('',$ar), PHP_EOL;
+    }else {
+        for($i=$k; $i<=$m; $i++) {
+            swap($ar[$k], $ar[$i]);
+            perm($ar, $k+1, $m);
+            swap($ar[$k], $ar[$i]);
+        }
+    }
+}
+
+function swap(&$a, &$b) {
+    $c = $a;
+    $a = $b;
+    $b = $c;
+}
+```
+
+
+
+针对几亿的文章设计一套存储体系
+=============
+问一下文章大概字段：标题、分类、作者、发布者、时间、内容
+
+分表
+
+
+求数组中和为s的两个数字，求出所有可能的
+=============
+法1：借助辅助空间hash，判断是否和的差值，如果有则为一对，一次遍历即可。
+
+法2：先排序，然后头尾两指针。
+
+
+
